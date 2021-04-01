@@ -1,5 +1,6 @@
 #!/bin/bash
 # Script to set up ansible user on a managed node.
+# Once this script is run, the rest of the node can be configured with Ansible.
 # Author: Connor Rhodes (connorrhodes.com)
 
 if [[ "$(whoami)" != "root" ]]; then
@@ -7,8 +8,11 @@ if [[ "$(whoami)" != "root" ]]; then
 	sudo su
 fi
 
-useradd --create-home ansible
+useradd ansible
+
 PASSWORD=$(< /dev/urandom tr -dc _A-Z-a-z-0-9\$\#\%\- | head -c 30)
 echo -e "$PASSWORD\n$PASSWORD" | passwd ansible
 echo "ansible user password is set to:"
 echo "$PASSWORD"
+
+echo 'ansible ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
