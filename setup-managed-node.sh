@@ -8,7 +8,7 @@ if [[ "$(whoami)" != "root" ]]; then
 	sudo su
 fi
 
-useradd ansible
+useradd --create-home ansible
 
 PASSWORD=$(< /dev/urandom tr -dc _A-Z-a-z-0-9\$\#\%\- | head -c 30)
 echo -e "$PASSWORD\n$PASSWORD" | passwd ansible
