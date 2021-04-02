@@ -21,5 +21,12 @@
     apt:
       pkg:
         - neovim
+        - git
       state: latest
       cache_valid_time: 86400
+
+  - name: Configure git
+    ansible.builtin.shell: |
+      git config --global user.name "Connor Rhodes"
+      git config --global user.email "cnnrrhodes@gmail.com"
+      exit 0
