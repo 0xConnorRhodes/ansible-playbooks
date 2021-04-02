@@ -1,0 +1,17 @@
+--- # configure ubuntu test vm
+- hosts: ubuntu-testvm
+
+  tasks:
+  - name: Add the user 'connor' with a bash shell, appending the group 'sudo'
+    become: yes
+    ansible.builtin.user:
+      name: connor
+      shell: /bin/bash
+      groups: sudo
+      append: yes
+
+  - name: Upgrade the OS (apt full-upgrade)
+    become: yes
+    apt:
+      update_cache: yes
+      upgrade: full
