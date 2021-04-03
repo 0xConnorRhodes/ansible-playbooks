@@ -56,3 +56,22 @@
       content: |
         Host github.com
             IdentityFile ~/.ssh/ansible-controlnode_ed25519
+  - name: test if git configs are cloned
+    ansible.builtin.shell: ls /configs 2>&1 | awk -F: '{ print $NF }'
+    register: configsdir_status
+    
+  - name: prepare git configs folder
+    become: yes
+    ansible.builtin.file:
+      path: /config
+      state: directory
+      group: connor
+      owner: connor
+      mode: '0755'
+
+      
+  - name: clone configs repo
+    ansible.builtin.git:
+      repo: git@github.com:connorhodes/my_dotfiles.git
+      version: ubuntu-testvm
+      dest: /configs
