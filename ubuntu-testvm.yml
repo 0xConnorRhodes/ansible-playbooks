@@ -25,12 +25,27 @@
       state: latest
       cache_valid_time: 86400
 
+  # configure git
   - ansible.builtin.shell: git config --list | grep user.name
     register: git_output
-
   - name: Configure git
     when: git_output.stdout != "user.name=Connor Rhodes"
     ansible.builtin.shell: |
       git config --global user.name "Connor Rhodes"
       git config --global user.email "cnnrrhodes@gmail.com"
       exit 0
+  - name: copy git public to server
+    ansible.builtin.copy:
+      src: /home/ansible/.ssh/ansible-controlnode_ed25519
+      dest: /home/ansible/.ssh/ansible-controlnode_ed25519
+      owner: ansible
+      group: ansible
+      mode: '0600'
+  - name: copy git private key to server
+    ansible.builtin.copy:
+      src: /home/ansible/.ssh/ansible-controlnode_ed25519.pub
+      dest: /home/ansible/.ssh/ansible-controlnode_ed25519.pub
+      owner: ansible
+      group: ansible
+      mode: '0644'
+  - name:
