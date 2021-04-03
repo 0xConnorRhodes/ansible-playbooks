@@ -1,4 +1,5 @@
 --- # configure ubuntu test vm
+
 - hosts: ubuntu-testvm
 
   tasks:
@@ -35,19 +36,35 @@
       git config --global user.name "Connor Rhodes"
       git config --global user.email "cnnrrhodes@gmail.com"
       exit 0
-  - name: copy git public to server
+  - name: copy git private to server
     ansible.builtin.copy:
       src: /home/ansible/.ssh/ansible-controlnode_ed25519
       dest: /home/ansible/.ssh/ansible-controlnode_ed25519
       owner: ansible
       group: ansible
       mode: '0600'
-  - name: copy git private key to server
+  - name: copy git public key to server connor user
     ansible.builtin.copy:
       src: /home/ansible/.ssh/ansible-controlnode_ed25519.pub
       dest: /home/ansible/.ssh/ansible-controlnode_ed25519.pub
       owner: ansible
       group: ansible
+      mode: '0644'
+  - name: copy git private key to server root user
+    become: yes
+    ansible.builtin.copy:
+      src: /home/ansible/.ssh/ansible-controlnode_ed25519
+      dest: /root/.ssh/ansible-controlnode_ed25519
+      owner: root
+      group: root
+      mode: '0600'
+  - name: copy git public key to server root user
+    become: yes
+    ansible.builtin.copy:
+      src: /home/ansible/.ssh/ansible-controlnode_ed25519.pub
+      dest: /root/.ssh/ansible-controlnode_ed25519.pub
+      owner: root
+      group: root
       mode: '0644'
   - name: add github to ssh config
     # copy with only testination will create the file with the supplied content
@@ -56,22 +73,20 @@
       content: |
         Host github.com
             IdentityFile ~/.ssh/ansible-controlnode_ed25519
-  - name: test if git configs are cloned
-    ansible.builtin.shell: ls /configs 2>&1 | awk -F: '{ print $NF }'
-    register: configsdir_status
-    
   - name: prepare git configs folder
     become: yes
     ansible.builtin.file:
-      path: /config
+      path: /configs
       state: directory
       group: connor
       owner: connor
       mode: '0755'
-
-      
   - name: clone configs repo
+    # note that this requires `pipelining = True` to be enabled in ansible.cfg
+    become: yes
+    become_user: connor
     ansible.builtin.git:
       repo: git@github.com:connorhodes/my_dotfiles.git
       version: ubuntu-testvm
       dest: /configs
+      bare: yes
