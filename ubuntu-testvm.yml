@@ -26,7 +26,8 @@
       cache_valid_time: 86400
 
   # configure git
-  - ansible.builtin.shell: git config --list | grep user.name
+  - name: test git config status
+    ansible.builtin.shell: git config --list | grep user.name
     register: git_output
   - name: Configure git
     when: git_output.stdout != "user.name=Connor Rhodes"
@@ -48,4 +49,10 @@
       owner: ansible
       group: ansible
       mode: '0644'
-  - name:
+  - name: add github to ssh config
+    # copy with only testination will create the file with the supplied content
+    ansible.builtin.copy:
+      dest: "/home/ansible/.ssh/config" 
+      content: |
+        Host github.com
+            IdentityFile ~/.ssh/ansible-controlnode_ed25519
