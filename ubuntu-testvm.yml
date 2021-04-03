@@ -90,3 +90,5 @@
       version: ubuntu-testvm
       dest: /configs
       bare: yes
+
+# TODO have ansible deploy configs from git bare repo. Will it merge them or do I need to clone to another folder and then rsync merge the files. Will it overwrite a default .bashrc?
