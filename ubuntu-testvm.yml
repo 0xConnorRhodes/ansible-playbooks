@@ -26,9 +26,11 @@
       state: latest
       cache_valid_time: 86400
 
+  # use the ansible module instead
   # configure git
   - name: test git config status
     ansible.builtin.shell: git config --list | grep user.name
+    ignore_errors: yes # it will error if output is blank. but that means we want to run git setup commands so ignore the errors and continue
     register: git_output
   - name: Configure git
     when: git_output.stdout != "user.name=Connor Rhodes"
