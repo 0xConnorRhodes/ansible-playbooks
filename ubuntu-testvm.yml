@@ -10,11 +10,11 @@
       groups: sudo
       append: yes
 
-#  - name: Upgrade the OS (apt full-upgrade)
-#    become: yes
-#    apt:
-#      update_cache: yes
-#      upgrade: full
+  - name: Upgrade the OS (apt full-upgrade)
+    become: yes
+    apt:
+      update_cache: yes
+      upgrade: full
 
   - name: Install Packages
     become: yes
@@ -85,23 +85,34 @@
       accept_hostkey: yes
       dest: "/configs"
       bare: true
+      version: "root"
 
   - name: Install dotfiles
     become: yes
-    shell: |
+    ansible.builtin.shell: |
       set -o pipefail
       # Alias
       shopt -s expand_aliases
-      alias config='git --git-dir=/configs --work-tree=/'"
+      alias config='git --git-dir=/configs --work-tree=/'
       config config --local status.showUntrackedFiles no
       # Handle existing config
       mkdir -p /tmp/root_dotfiles_backup
       config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} dirname {} | awk {'print $1'} | xargs -I{} mkdir -p /tmp/root_dotfiles_backup/{}  # noqa 204
       config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} /tmp/root_dotfiles_backup/{}
       # Install
+      config checkout root
       config checkout
-    args:
+    args: 
       chdir: "/"
       creates: "/.configs"
       executable: /bin/bash
-    when: not git_dotfiles_head.stat.exists
+
+  - name: Append aliases file
+    become: yes
+    blockinfile:
+      path: "/root/.bashrc"
+      state: present
+      create: yes
+      block: |
+        alias config='git --git-dir=/configs --work-tree=/'
+      marker: '# {mark} ANSIBLE MANAGED BLOCK jan_matthis.git_dotfiles'
