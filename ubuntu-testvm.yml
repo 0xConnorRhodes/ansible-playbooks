@@ -75,3 +75,33 @@
       content: |
         Host github.com
             IdentityFile ~/.ssh/ansible-controlnode_ed25519
+
+# set up root dotfiles
+  - name: Clone repository
+    become: yes
+    ansible.builtin.git:
+      repo: "git@github.com:connorhodes/dotfiles-ubuntu-testvm.git"
+      key_file: "/home/ansible/.ssh/ansible-controlnode_ed25519"
+      accept_hostkey: yes
+      dest: "/configs"
+      bare: true
+
+  - name: Install dotfiles
+    become: yes
+    shell: |
+      set -o pipefail
+      # Alias
+      shopt -s expand_aliases
+      alias config='git --git-dir=/configs --work-tree=/'"
+      config config --local status.showUntrackedFiles no
+      # Handle existing config
+      mkdir -p /tmp/root_dotfiles_backup
+      config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} dirname {} | awk {'print $1'} | xargs -I{} mkdir -p /tmp/root_dotfiles_backup/{}  # noqa 204
+      config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} /tmp/root_dotfiles_backup/{}
+      # Install
+      config checkout
+    args:
+      chdir: "/"
+      creates: "/.configs"
+      executable: /bin/bash
+    when: not git_dotfiles_head.stat.exists
