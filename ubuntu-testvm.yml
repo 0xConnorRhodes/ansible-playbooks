@@ -1,5 +1,4 @@
 --- # configure ubuntu test vm
-
 - hosts: ubuntu-testvm
 
   tasks:
@@ -11,11 +10,11 @@
       groups: sudo
       append: yes
 
-  - name: Upgrade the OS (apt full-upgrade)
-    become: yes
-    apt:
-      update_cache: yes
-      upgrade: full
+#  - name: Upgrade the OS (apt full-upgrade)
+#    become: yes
+#    apt:
+#      update_cache: yes
+#      upgrade: full
 
   - name: Install Packages
     become: yes
@@ -26,18 +25,19 @@
       state: latest
       cache_valid_time: 86400
 
-  # use the ansible module instead
-  # configure git
-  - name: test git config status
-    ansible.builtin.shell: git config --list | grep user.name
-    ignore_errors: yes # it will error if output is blank. but that means we want to run git setup commands so ignore the errors and continue
-    register: git_output
-  - name: Configure git
-    when: git_output.stdout != "user.name=Connor Rhodes"
-    ansible.builtin.shell: |
-      git config --global user.name "Connor Rhodes"
-      git config --global user.email "cnnrrhodes@gmail.com"
-      exit 0
+  - name: add git user.name
+    become: yes
+    community.general.git_config:
+      name: user.name
+      scope: system
+      value: "Connor Rhodes"
+  - name: add git user.email
+    become: yes
+    community.general.git_config:
+      name: user.email
+      scope: system
+      value: "cnnrrhodes@gmail.com"
+
   - name: copy git private to server
     ansible.builtin.copy:
       src: /home/ansible/.ssh/ansible-controlnode_ed25519
@@ -75,22 +75,3 @@
       content: |
         Host github.com
             IdentityFile ~/.ssh/ansible-controlnode_ed25519
-  - name: prepare git configs folder
-    become: yes
-    ansible.builtin.file:
-      path: /configs
-      state: directory
-      group: connor
-      owner: connor
-      mode: '0755'
-  - name: clone configs repo
-    # note that this requires `pipelining = True` to be enabled in ansible.cfg
-    become: yes
-    become_user: connor
-    ansible.builtin.git:
-      repo: git@github.com:connorhodes/my_dotfiles.git
-      version: ubuntu-testvm
-      dest: /configs
-      bare: yes
-
-# TODO have ansible deploy configs from git bare repo. Will it merge them or do I need to clone to another folder and then rsync merge the files. Will it overwrite a default .bashrc?
