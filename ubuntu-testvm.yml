@@ -38,14 +38,14 @@
       scope: system
       value: "cnnrrhodes@gmail.com"
 
-  - name: copy git private to server
+  - name: copy git private key to ansible user
     ansible.builtin.copy:
       src: /home/ansible/.ssh/ansible-controlnode_ed25519
       dest: /home/ansible/.ssh/ansible-controlnode_ed25519
       owner: ansible
       group: ansible
       mode: '0600'
-  - name: copy git public key to server connor user
+  - name: copy git public key to ansible user
     ansible.builtin.copy:
       src: /home/ansible/.ssh/ansible-controlnode_ed25519.pub
       dest: /home/ansible/.ssh/ansible-controlnode_ed25519.pub
@@ -68,10 +68,44 @@
       owner: root
       group: root
       mode: '0644'
-  - name: add github to ssh config
+  - name: copy git private key to server connor user
+    become: yes
+    become_user: connor
+    ansible.builtin.copy:
+      src: /home/ansible/.ssh/ansible-controlnode_ed25519
+      dest: /home/connor/.ssh/ansible-controlnode_ed25519
+      owner: connor
+      group: connor
+      mode: '0600'
+  - name: copy git public key to server connor user
+    become: yes
+    ansible.builtin.copy:
+      src: /home/ansible/.ssh/ansible-controlnode_ed25519.pub
+      dest: /home/connor/.ssh/ansible-controlnode_ed25519.pub
+      owner: connor
+      group: connor
+      mode: '0644'
+  - name: add github to ansible ssh config
     # copy with only testination will create the file with the supplied content
     ansible.builtin.copy:
       dest: "/home/ansible/.ssh/config" 
+      content: |
+        Host github.com
+            IdentityFile ~/.ssh/ansible-controlnode_ed25519
+  - name: add github to connor ssh config 
+    # copy with only testination will create the file with the supplied content
+    become: yes
+    become_user: connor
+    ansible.builtin.copy:
+      dest: "/home/connor/.ssh/config" 
+      content: |
+        Host github.com
+            IdentityFile ~/.ssh/ansible-controlnode_ed25519
+  - name: add github to root ssh config 
+    # copy with only testination will create the file with the supplied content
+    become: yes
+    ansible.builtin.copy:
+      dest: "/root/.ssh/config" 
       content: |
         Host github.com
             IdentityFile ~/.ssh/ansible-controlnode_ed25519
@@ -106,6 +140,20 @@
       chdir: "/"
       creates: "/.configs"
       executable: /bin/bash
+
+
+#  - name: Update dotfiles
+#    shell: |
+#      # Alias
+#      shopt -s expand_aliases
+#      {{ git_dotfiles_define_alias }}
+#      {{ git_dotfiles_alias }} config --local status.showUntrackedFiles no
+#      # Update
+#      {{ git_dotfiles_alias }} pull
+#    args:
+#      chdir: "{{ git_dotfiles_dir }}"
+#      executable: /bin/bash
+#    when: git_dotfiles_head.stat.exists
 
   - name: Append aliases file
     become: yes
