@@ -40,48 +40,47 @@
 
   - name: copy git private key to ansible user
     ansible.builtin.copy:
-      src: /home/ansible/.ssh/ansible-controlnode_ed25519
-      dest: /home/ansible/.ssh/ansible-controlnode_ed25519
+      src: /home/ansible/.ssh/ansible-node-github-connorhodes
+      dest: /home/ansible/.ssh/ansible-node-github-connorhodes
       owner: ansible
       group: ansible
       mode: '0600'
   - name: copy git public key to ansible user
     ansible.builtin.copy:
-      src: /home/ansible/.ssh/ansible-controlnode_ed25519.pub
-      dest: /home/ansible/.ssh/ansible-controlnode_ed25519.pub
+      src: /home/ansible/.ssh/ansible-node-github-connorhodes.pub
+      dest: /home/ansible/.ssh/ansible-node-github-connorhodes.pub
       owner: ansible
       group: ansible
       mode: '0644'
   - name: copy git private key to server root user
     become: yes
     ansible.builtin.copy:
-      src: /home/ansible/.ssh/ansible-controlnode_ed25519
-      dest: /root/.ssh/ansible-controlnode_ed25519
+      src: /home/ansible/.ssh/ansible-node-github-connorhodes
+      dest: /root/.ssh/ansible-node-github-connorhodes
       owner: root
       group: root
       mode: '0600'
   - name: copy git public key to server root user
     become: yes
     ansible.builtin.copy:
-      src: /home/ansible/.ssh/ansible-controlnode_ed25519.pub
-      dest: /root/.ssh/ansible-controlnode_ed25519.pub
+      src: /home/ansible/.ssh/ansible-node-github-connorhodes.pub
+      dest: /root/.ssh/ansible-node-github-connorhodes.pub
       owner: root
       group: root
       mode: '0644'
   - name: copy git private key to server connor user
     become: yes
-    become_user: connor
     ansible.builtin.copy:
-      src: /home/ansible/.ssh/ansible-controlnode_ed25519
-      dest: /home/connor/.ssh/ansible-controlnode_ed25519
+      src: /home/ansible/.ssh/ansible-node-github-connorhodes
+      dest: /home/connor/.ssh/ansible-node-github-connorhodes
       owner: connor
       group: connor
       mode: '0600'
   - name: copy git public key to server connor user
     become: yes
     ansible.builtin.copy:
-      src: /home/ansible/.ssh/ansible-controlnode_ed25519.pub
-      dest: /home/connor/.ssh/ansible-controlnode_ed25519.pub
+      src: /home/ansible/.ssh/ansible-node-github-connorhodes.pub
+      dest: /home/connor/.ssh/ansible-node-github-connorhodes.pub
       owner: connor
       group: connor
       mode: '0644'
@@ -91,16 +90,17 @@
       dest: "/home/ansible/.ssh/config" 
       content: |
         Host github.com
-            IdentityFile ~/.ssh/ansible-controlnode_ed25519
+            IdentityFile ~/.ssh/ansible-node-github-connorhodes
   - name: add github to connor ssh config 
     # copy with only testination will create the file with the supplied content
     become: yes
-    become_user: connor
     ansible.builtin.copy:
       dest: "/home/connor/.ssh/config" 
       content: |
         Host github.com
-            IdentityFile ~/.ssh/ansible-controlnode_ed25519
+            IdentityFile ~/.ssh/ansible-node-github-connorhodes
+      owner: connor
+      group: connor
   - name: add github to root ssh config 
     # copy with only testination will create the file with the supplied content
     become: yes
@@ -108,14 +108,14 @@
       dest: "/root/.ssh/config" 
       content: |
         Host github.com
-            IdentityFile ~/.ssh/ansible-controlnode_ed25519
+            IdentityFile ~/.ssh/ansible-node-github-connorhodes.pub
 
 # set up root dotfiles
   - name: Clone repository
     become: yes
     ansible.builtin.git:
       repo: "git@github.com:connorhodes/dotfiles-ubuntu-testvm.git"
-      key_file: "/home/ansible/.ssh/ansible-controlnode_ed25519"
+      key_file: "/home/ansible/.ssh/ansible-node-github-connorhodes"
       accept_hostkey: yes
       dest: "/configs"
       bare: true
