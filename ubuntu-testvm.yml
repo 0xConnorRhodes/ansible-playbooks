@@ -94,6 +94,7 @@
       content: |
         Host github.com
             IdentityFile ~/.ssh/ansible-node-github-connorhodes
+            IdentitiesOnly yes
   - name: add github to connor ssh config 
     become: yes
     ansible.builtin.copy:
@@ -101,6 +102,7 @@
       content: |
         Host github.com
             IdentityFile ~/.ssh/ansible-node-github-connorhodes
+            IdentitiesOnly yes
       owner: connor
       group: connor
   - name: add github to root ssh config 
@@ -110,6 +112,7 @@
       content: |
         Host github.com
             IdentityFile ~/.ssh/ansible-node-github-connorhodes
+            IdentitiesOnly yes
   - name: test for root configs
     become: yes
     ansible.builtin.file: 
@@ -142,12 +145,14 @@
       chdir: "/.cfg"
       executable: /bin/bash
     when: root_configstest.changed
-#  - name: test for sudo_user configs # TODO
-#    become: yes
-#    ansible.builtin.file: 
-#      path: /home/connor/.cfg
-#      state: directory
-#    register: sudo_configstest
+  - name: test for sudo_user configs # TODO
+    become: yes
+    ansible.builtin.file: 
+      path: /home/connor/.cfg
+      state: directory
+      owner: connor
+      group: connor
+    register: sudo_configstest
 #  - name: clone sudo_user configs # TODO
 #    become: yes
 #    ansible.builtin.shell: |
@@ -165,7 +170,43 @@
 #      cd /home/connor/.cfg
 #      config checkout
 #    args: 
-#      chdir: "/home/connor"
-#      creates: "/home/connor/cfg"
+#      chdir: "/home/connor/.cfg"
 #      executable: /bin/bash
-#    when: root_configstest.changed
+#    when: sudo_configstest.changed
+  - name: clone sudo_user configs # TODO
+    become: yes
+    ansible.builtin.shell: |
+      set -o pipefail
+      git clone --bare git@github.com:connorhodes/dotfiles-ubuntu-testvm.git --branch sudo_user --single-branch /home/connor/.cfg
+    args: 
+      chdir: "/home/connor/.cfg"
+      executable: /bin/bash
+    when: sudo_configstest.changed
+  - name: Recursively change ownership of a directory
+    become: yes
+    ansible.builtin.file:
+      path: /home/connor/.cfg
+      state: directory
+      recurse: yes
+      owner: connor
+      group: connor
+  - name: make directory for sudo_user config backups
+    become: yes
+    ansible.builtin.file:
+      path: /home/connor/.connor_default_configs_backup
+      state: directory
+      recurse: yes
+      owner: connor
+      group: connor
+  - name: checkout sudo_user configs
+    become: yes
+    ansible.builtin.shell: |
+      sudo -i -u connor bash << 'EOF'
+      git --git-dir=/home/connor/.cfg/ --work-tree=/home/connor/ config --local status.showUntrackedFiles no
+      cd /home/connor/.cfg
+      git --git-dir=/home/connor/.cfg/ --work-tree=/home/connor/ status 2>&1 | egrep "deleted:" | awk {'print $2'} | xargs -I{} mv {} /home/connor/.connor_default_configs_backup/
+      git --git-dir=/home/connor/.cfg/ --work-tree=/home/connor/ checkout
+      EOF
+    args: 
+      chdir: "/home/connor/.cfg"
+      executable: /bin/bash
