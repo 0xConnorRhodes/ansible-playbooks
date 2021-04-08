@@ -11,6 +11,7 @@
     become: yes
     ansible.builtin.user:
       name: connor
+      password: "{{ lookup('community.general.passwordstore', 'sysadmin/main-vps-sudo-user') | password_hash('sha512') }}"
       shell: /bin/bash
       groups: sudo
       append: yes
@@ -69,7 +70,7 @@
     become_method: sudo
     become_flags: '-HE'
     ansible.builtin.git:
-      repo: "{{ configs_repo "
+      repo: "{{ configs_repo }}"
       accept_hostkey: yes
       dest: /home/connor/.cfg
       bare: true
