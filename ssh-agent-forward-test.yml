@@ -1,0 +1,21 @@
+--- # test ssh-agent forwarding
+- hosts: ubuntu-testvm
+  tasks:
+  - name: clone private repo
+    ansible.builtin.git:
+      repo: "git@github.com:0xConnorRhodes/my_dotfiles.git"
+      accept_hostkey: yes
+      dest: my_dotfiles2
+      bare: true
+
+  - name: clone root configs
+    become: yes
+    become_method: sudo
+    become_flags: '-HE'
+    ansible.builtin.git:
+      repo: "git@github.com:0xConnorRhodes/dotfiles-ubuntu-testvm.git"
+      accept_hostkey: yes
+      dest: /.cfg
+      bare: true
+      version: root
+    register: root_configstest
