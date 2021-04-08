@@ -1,34 +1,6 @@
 --- # configure ubuntu test vm
 - hosts: ubuntu-testvm
-
   tasks:
-  - name: Add the user 'connor' with a bash shell, appending the group 'sudo'
-    become: yes
-    ansible.builtin.user:
-      name: connor
-      shell: /bin/bash
-      groups: sudo
-      append: yes
-  - name: Upgrade the OS (apt full-upgrade)
-    become: yes
-    apt:
-      update_cache: yes
-      upgrade: full
-  - name: Install Packages
-    become: yes
-    apt:
-      pkg:
-        - neovim
-        - git
-        - unattended-upgrades
-      state: latest
-      cache_valid_time: 86400
-  - name: enable unattended-upgrades
-    ansible.builtin.systemd:
-      name: unattended-upgrades
-      state: started
-      enabled: yes
-      masked: no
   - name: clone root configs
     become: yes
     # because ssh-agent forwarding uses environment variables, the two lines below are necessary for become to not forget the env vars given in the initial ssh connection
@@ -100,11 +72,3 @@
       chdir: "/home/connor/.cfg"
       executable: /bin/bash
     when: sudo_user_configstest.changed
-
-# set up fail2ban
-# disable ssh password login on VC'd config
-# git
-# set up basic nginx
-# proof of concept nginx serving ssg5 markdown landing page
-# record youtube walkthrough of the ansible playbook
-# spin up ansible'd webserver
