@@ -7,6 +7,10 @@
     user:
       name: root
       password: '!'
+  - name: Disable ansible password
+    user:
+      name: ansible
+      password: '!'
   - name: Add the user 'connor' with a bash shell, appending the group 'sudo'
     become: yes
     ansible.builtin.user:
