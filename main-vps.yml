@@ -3,6 +3,8 @@
   vars:
     configs_repo: "git@github.com:0xConnorRhodes/dotfiles-main-vps.git"
   tasks:
+
+# CONFIGURE USERS AND LOGIN
   - name: Disable root login
     user:
       name: root
@@ -24,6 +26,8 @@
     apt:
       update_cache: yes
       upgrade: full
+
+# INSTALL PACKAGES
   - name: Install Packages
     become: yes
     apt:
@@ -34,6 +38,8 @@
         - fail2ban
       state: latest
       cache_valid_time: 86400
+
+# ENABLE SERVICES
   - name: enable unattended-upgrades
     ansible.builtin.systemd:
       name: unattended-upgrades
@@ -46,6 +52,8 @@
       state: started
       enabled: yes
       masked: no
+
+# CLONE AND CHECKOUT CONFIGS
   - name: clone root configs
     become: yes
     # because ssh-agent forwarding uses environment variables, the two lines below are necessary for become to not forget the env vars given in the initial ssh connection
