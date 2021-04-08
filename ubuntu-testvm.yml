@@ -22,8 +22,16 @@
       pkg:
         - neovim
         - git
+        - unattended-upgrades
       state: latest
       cache_valid_time: 86400
+
+  - name: enable unattended-upgrades
+    ansible.builtin.systemd:
+      name: unattended-upgrades
+      state: started
+      enabled: yes
+      masked: no
 
   - name: add git user.name
     become: yes
@@ -85,14 +93,13 @@
       group: connor
       mode: '0644'
   - name: add github to ansible ssh config
-    # copy with only testination will create the file with the supplied content
+    # copy with only destination will create the file with the supplied content
     ansible.builtin.copy:
       dest: "/home/ansible/.ssh/config" 
       content: |
         Host github.com
             IdentityFile ~/.ssh/ansible-node-github-connorhodes
   - name: add github to connor ssh config 
-    # copy with only testination will create the file with the supplied content
     become: yes
     ansible.builtin.copy:
       dest: "/home/connor/.ssh/config" 
@@ -102,7 +109,6 @@
       owner: connor
       group: connor
   - name: add github to root ssh config 
-    # copy with only testination will create the file with the supplied content
     become: yes
     ansible.builtin.copy:
       dest: "/root/.ssh/config" 
@@ -110,37 +116,66 @@
         Host github.com
             IdentityFile ~/.ssh/ansible-node-github-connorhodes
 
-# set up root dotfiles
-  - name: Clone repository
+  - name: test for root configs
     become: yes
-    ansible.builtin.git:
-      repo: "git@github.com:connorhodes/dotfiles-ubuntu-testvm.git"
-      key_file: "/home/ansible/.ssh/ansible-node-github-connorhodes"
-      accept_hostkey: yes
-      dest: "/configs"
-      bare: true
-      version: "root"
-
-  - name: Install dotfiles
+    ansible.builtin.file: 
+      path: /configs
+      state: directory
+    register: configstest
+  
+  - name: clone root configs
     become: yes
     ansible.builtin.shell: |
       set -o pipefail
+      git clone --bare git@github.com:connorhodes/dotfiles-ubuntu-testvm.git --branch root --single-branch /configs
       # Alias
       shopt -s expand_aliases
       alias config='git --git-dir=/configs --work-tree=/'
       config config --local status.showUntrackedFiles no
       # Handle existing config
-      mkdir -p /root/.root_dotfiles_backup
-      config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} dirname {} | awk {'print $1'} | xargs -I{} mkdir -p /root/.root_dotfiles_backup/{}  # noqa 204
-      config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} /root/.root_dotfiles_backup/{}
-      # Install
+      mkdir -p /root/.root_default_configs_backup
       cd /configs
-      config checkout root
+      config status | egrep "deleted:" | awk {'print $2'} | xargs -I{} mv {} /root/.root_default_configs_backup/
+      # Install
       config checkout
     args: 
       chdir: "/"
       creates: "/.configs"
       executable: /bin/bash
+    when: configstest.changed
+    
+
+# # set up root dotfiles
+#  - name: Clone repository
+#    become: yes
+#    ansible.builtin.git:
+#      repo: "git@github.com:connorhodes/dotfiles-ubuntu-testvm.git"
+#      key_file: "/home/ansible/.ssh/ansible-node-github-connorhodes"
+#      accept_hostkey: yes
+#      dest: "/configs"
+#      bare: true
+#      version: sudo_user
+
+#  - name: Install dotfiles
+#    become: yes
+#    ansible.builtin.shell: |
+#      set -o pipefail
+#      # Alias
+#      shopt -s expand_aliases
+#      alias config='git --git-dir=/configs --work-tree=/'
+#      config config --local status.showUntrackedFiles no
+#      # Handle existing config
+#      mkdir -p /root/.root_dotfiles_backup
+#      config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} dirname {} | awk {'print $1'} | xargs -I{} mkdir -p /root/.root_dotfiles_backup/{}  # noqa 204
+#      config checkout 2>&1 | egrep "\s+\." | awk {'print $1'} | xargs -I{} mv {} /root/.root_dotfiles_backup/{}
+#      # Install
+#      cd /configs
+#      config checkout root
+#      config checkout
+#    args: 
+#      chdir: "/"
+#      creates: "/.configs"
+#      executable: /bin/bash
 
 # todo: manually 
 
