@@ -1,10 +1,12 @@
 --- # Configure main vps to host website etc
-
-
 - hosts: main-vps
   vars:
     configs_repo: "git@github.com:0xConnorRhodes/dotfiles-main-vps.git"
   tasks:
+  - name: Disable root login
+    user:
+      name: root
+      password: '!'
   - name: Add the user 'connor' with a bash shell, appending the group 'sudo'
     become: yes
     ansible.builtin.user:
