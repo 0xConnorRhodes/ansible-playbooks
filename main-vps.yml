@@ -125,6 +125,10 @@
       chdir: "/home/connor/.cfg"
       executable: /bin/bash
     when: sudo_user_configstest.changed
+...
+
+--- # set up web server
+
 
 # set up basic nginx
 # proof of concept nginx serving ssg5 markdown landing page
