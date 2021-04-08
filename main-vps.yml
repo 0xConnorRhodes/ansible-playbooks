@@ -1,0 +1,113 @@
+--- # Configure main vps to host website etc
+
+
+- hosts: main-vps
+  vars:
+    configs_repo: "git@github.com:0xConnorRhodes/dotfiles-main-vps.git"
+  tasks:
+  - name: Add the user 'connor' with a bash shell, appending the group 'sudo'
+    become: yes
+    ansible.builtin.user:
+      name: connor
+      shell: /bin/bash
+      groups: sudo
+      append: yes
+  - name: Upgrade the OS (apt full-upgrade)
+    become: yes
+    apt:
+      update_cache: yes
+      upgrade: full
+  - name: Install Packages
+    become: yes
+    apt:
+      pkg:
+        - neovim
+        - git
+        - unattended-upgrades
+      state: latest
+      cache_valid_time: 86400
+  - name: enable unattended-upgrades
+    ansible.builtin.systemd:
+      name: unattended-upgrades
+      state: started
+      enabled: yes
+      masked: no
+  - name: clone root configs
+    become: yes
+    # because ssh-agent forwarding uses environment variables, the two lines below are necessary for become to not forget the env vars given in the initial ssh connection
+    become_method: sudo
+    become_flags: '-HE'
+    ansible.builtin.git:
+      repo: "{{ configs_repo }}"
+      accept_hostkey: yes
+      dest: /.cfg
+      bare: true
+      version: root
+    register: root_configstest
+    #  single_branch: true # will be added in ansible 3.0
+  - name: checkout root
+    become: yes
+    become_method: sudo
+    become_flags: '-HE'
+    # note forcing the checkout automatically deletes all the duplicate copies of configs on the filesystem
+    ansible.builtin.shell: |
+      set -o pipefail
+      shopt -s expand_aliases
+      alias conf='git --git-dir=/.cfg --work-tree=/'
+      conf config --local status.showUntrackedFiles no
+      conf checkout -f root
+      conf checkout
+      conf push --set-upstream origin root
+    args: 
+      chdir: "/.cfg"
+      executable: /bin/bash
+    when: root_configstest.changed
+  - name: clone sudo_user configs
+    become: yes
+    become_method: sudo
+    become_flags: '-HE'
+    ansible.builtin.git:
+      repo: "{{ configs_repo "
+      accept_hostkey: yes
+      dest: /home/connor/.cfg
+      bare: true
+      version: sudo_user
+    register: sudo_user_configstest
+    #  single_branch: true # will be added in ansible 3.0
+  - name: change sudo_configs ownership
+    become: yes
+    ansible.builtin.file:
+      path: /home/connor/.cfg
+      state: directory
+      recurse: yes
+      owner: connor
+      group: connor
+  - name: checkout sudo_user
+    become: yes
+    become_method: sudo
+    become_flags: '-HE'
+    # note forcing the checkout automatically deletes all the duplicate copies of configs on the filesystem
+    ansible.builtin.shell: |
+      sudo -i -u connor bash << 'EOF'
+      set -o pipefail
+      shopt -s expand_aliases
+      alias conf='git --git-dir=/home/connor/.cfg/ --work-tree=/home/connor/'
+      conf config --local status.showUntrackedFiles no
+      conf checkout -f sudo_user
+      conf checkout
+      EOF
+      shopt -s expand_aliases
+      alias conf='git --git-dir=/home/connor/.cfg/ --work-tree=/home/connor/'
+      conf push --set-upstream origin sudo_user
+    args: 
+      chdir: "/home/connor/.cfg"
+      executable: /bin/bash
+    when: sudo_user_configstest.changed
+
+# set up fail2ban
+# disable ssh password login on VC'd config
+# git
+# set up basic nginx
+# proof of concept nginx serving ssg5 markdown landing page
+# record youtube walkthrough of the ansible playbook
+# spin up ansible'd webserver
