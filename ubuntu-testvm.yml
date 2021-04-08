@@ -140,6 +140,15 @@
       chdir: "/.cfg"
       executable: /bin/bash
     when: root_configstest.changed
+
+# replicate git clone for sudo_user using above method
+# set up fail2ban
+# disable ssh password login on VC'd config
+# set up basic nginx
+# proof of concept nginx serving ssg5 markdown landing page
+# record youtube walkthrough of the ansible playbook
+# spin up ansible'd webserver
+
 #  - name: test for sudo_user configs # TODO
 #    become: yes
 #    ansible.builtin.file: 
