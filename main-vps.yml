@@ -1,4 +1,4 @@
---- # Configure main vps to host website etc
+--- # bootstrap main vps
 - hosts: main-vps
   vars:
     configs_repo: "git@github.com:0xConnorRhodes/dotfiles-main-vps.git"
