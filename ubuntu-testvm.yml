@@ -122,44 +122,23 @@
       dest: /.cfg
       bare: true
       version: root
+    register: root_configstest
     #  single_branch: true # will be added in ansible 3.0
-
-
-
-
-
-#  - name: test for root configs
-#    become: yes
-#    ansible.builtin.file: 
-#      path: /.cfg
-#      state: directory
-#    register: root_configstest
-#  - name: clone root configs
-#    become: yes
-#    ansible.builtin.shell: |
-#      set -o pipefail
-#      echo ".cfg" >> /.gitignore 
-#      git clone --bare git@github.com:connorhodes/dotfiles-ubuntu-testvm.git --branch root --single-branch /.cfg
-#      # Alias
-#      shopt -s expand_aliases
-#      alias config='git --git-dir=/.cfg --work-tree=/'
-#      config config --local status.showUntrackedFiles no
-#      # Handle existing config
-#      mkdir -p /root/.root_default_configs_backup
-#      cd /.cfg
-#      config status | egrep "deleted:" | awk {'print $2'} | xargs -I{} mv {} /root/.root_default_configs_backup/
-#      # Install
-#      config checkout
-#      # auto commit and push to set upstream origin automatically
-#      echo "#DEPLOY_COMMENT" >> /root/.bashrc
-#      config commit -a -m "auto deploy commit"
-#      git push --set-upstream origin root
-#      sed -i '/^\#DEPLOY_COMMENT/d' /root/.bashrc
-#      config push
-#    args: 
-#      chdir: "/.cfg"
-#      executable: /bin/bash
-#    when: root_configstest.changed
+  - name: checkout root
+    become: yes
+    ansible.builtin.shell: |
+      set -o pipefail
+      echo ".cfg" >> /.gitignore 
+      shopt -s expand_aliases
+      alias config='git --git-dir=/.cfg --work-tree=/'
+      config config --local status.showUntrackedFiles no
+      config checkout -f root
+      config checkout
+      config push --set-upstream origin root
+    args: 
+      chdir: "/.cfg"
+      executable: /bin/bash
+    when: root_configstest.changed
 #  - name: test for sudo_user configs # TODO
 #    become: yes
 #    ansible.builtin.file: 
