@@ -2,122 +2,40 @@
 - hosts: ubuntu-testvm
 
   tasks:
-  - name: Add the user 'connor' with a bash shell, appending the group 'sudo'
-    become: yes
-    ansible.builtin.user:
-      name: connor
-      shell: /bin/bash
-      groups: sudo
-      append: yes
-  - name: Upgrade the OS (apt full-upgrade)
-    become: yes
-    apt:
-      update_cache: yes
-      upgrade: full
-  - name: Install Packages
-    become: yes
-    apt:
-      pkg:
-        - neovim
-        - git
-        - unattended-upgrades
-      state: latest
-      cache_valid_time: 86400
-  - name: enable unattended-upgrades
-    ansible.builtin.systemd:
-      name: unattended-upgrades
-      state: started
-      enabled: yes
-      masked: no
-  - name: add git user.name
-    become: yes
-    community.general.git_config:
-      name: user.name
-      scope: system
-      value: "Connor Rhodes"
-  - name: add git user.email
-    become: yes
-    community.general.git_config:
-      name: user.email
-      scope: system
-      value: "cnnrrhodes@gmail.com"
-  - name: copy git private key to ansible user
-    ansible.builtin.copy:
-      src: /home/ansible/.ssh/ansible-node-github-connorhodes
-      dest: /home/ansible/.ssh/ansible-node-github-connorhodes
-      owner: ansible
-      group: ansible
-      mode: '0600'
-  - name: copy git public key to ansible user
-    ansible.builtin.copy:
-      src: /home/ansible/.ssh/ansible-node-github-connorhodes.pub
-      dest: /home/ansible/.ssh/ansible-node-github-connorhodes.pub
-      owner: ansible
-      group: ansible
-      mode: '0644'
-  - name: copy git private key to server root user
-    become: yes
-    ansible.builtin.copy:
-      src: /home/ansible/.ssh/ansible-node-github-connorhodes
-      dest: /root/.ssh/ansible-node-github-connorhodes
-      owner: root
-      group: root
-      mode: '0600'
-  - name: copy git public key to server root user
-    become: yes
-    ansible.builtin.copy:
-      src: /home/ansible/.ssh/ansible-node-github-connorhodes.pub
-      dest: /root/.ssh/ansible-node-github-connorhodes.pub
-      owner: root
-      group: root
-      mode: '0644'
-  - name: copy git private key to server connor user
-    become: yes
-    ansible.builtin.copy:
-      src: /home/ansible/.ssh/ansible-node-github-connorhodes
-      dest: /home/connor/.ssh/ansible-node-github-connorhodes
-      owner: connor
-      group: connor
-      mode: '0600'
-  - name: copy git public key to server connor user
-    become: yes
-    ansible.builtin.copy:
-      src: /home/ansible/.ssh/ansible-node-github-connorhodes.pub
-      dest: /home/connor/.ssh/ansible-node-github-connorhodes.pub
-      owner: connor
-      group: connor
-      mode: '0644'
-  - name: add github to ansible ssh config
-    # copy with only destination will create the file with the supplied content
-    ansible.builtin.copy:
-      dest: "/home/ansible/.ssh/config" 
-      content: |
-        Host github.com
-            IdentityFile ~/.ssh/ansible-node-github-connorhodes
-            IdentitiesOnly yes
-  - name: add github to connor ssh config 
-    become: yes
-    ansible.builtin.copy:
-      dest: "/home/connor/.ssh/config" 
-      content: |
-        Host github.com
-            IdentityFile ~/.ssh/ansible-node-github-connorhodes
-            IdentitiesOnly yes
-      owner: connor
-      group: connor
-  - name: add github to root ssh config 
-    become: yes
-    ansible.builtin.copy:
-      dest: "/root/.ssh/config" 
-      content: |
-        Host github.com
-            IdentityFile ~/.ssh/ansible-node-github-connorhodes
-            IdentitiesOnly yes
+#  - name: Add the user 'connor' with a bash shell, appending the group 'sudo'
+#    become: yes
+#    ansible.builtin.user:
+#      name: connor
+#      shell: /bin/bash
+#      groups: sudo
+#      append: yes
+#  - name: Upgrade the OS (apt full-upgrade)
+#    become: yes
+#    apt:
+#      update_cache: yes
+#      upgrade: full
+#  - name: Install Packages
+#    become: yes
+#    apt:
+#      pkg:
+#        - neovim
+#        - git
+#        - unattended-upgrades
+#      state: latest
+#      cache_valid_time: 86400
+#  - name: enable unattended-upgrades
+#    ansible.builtin.systemd:
+#      name: unattended-upgrades
+#      state: started
+#      enabled: yes
+#      masked: no
   - name: clone root configs
     become: yes
+    # because ssh-agent forwarding uses environment variables, the two lines below are necessary for become to not forget the env vars given in the initial ssh connection
+    become_method: sudo
+    become_flags: '-HE'
     ansible.builtin.git:
-      repo: "git@github.com:connorhodes/dotfiles-ubuntu-testvm.git"
-      key_file: "/root/.ssh/ansible-node-github-connorhodes"
+      repo: "git@github.com:0xConnorRhodes/dotfiles-ubuntu-testvm.git"
       accept_hostkey: yes
       dest: /.cfg
       bare: true
@@ -126,91 +44,67 @@
     #  single_branch: true # will be added in ansible 3.0
   - name: checkout root
     become: yes
+    become_method: sudo
+    become_flags: '-HE'
     # note forcing the checkout automatically deletes all the duplicate copies of configs on the filesystem
     ansible.builtin.shell: |
       set -o pipefail
-      echo ".cfg" >> /.gitignore 
       shopt -s expand_aliases
-      alias config='git --git-dir=/.cfg --work-tree=/'
-      config config --local status.showUntrackedFiles no
-      config checkout -f root
-      config checkout
-      config push --set-upstream origin root
+      alias conf='git --git-dir=/.cfg --work-tree=/'
+      conf config --local status.showUntrackedFiles no
+      conf checkout -f root
+      conf checkout
+      conf push --set-upstream origin root
     args: 
       chdir: "/.cfg"
       executable: /bin/bash
     when: root_configstest.changed
+  - name: clone sudo_user configs
+    become: yes
+    become_method: sudo
+    become_flags: '-HE'
+    ansible.builtin.git:
+      repo: "git@github.com:0xConnorRhodes/dotfiles-ubuntu-testvm.git"
+      accept_hostkey: yes
+      dest: /home/connor/.cfg
+      bare: true
+      version: sudo_user
+    register: sudo_user_configstest
+    #  single_branch: true # will be added in ansible 3.0
+  - name: change sudo_configs ownership
+    become: yes
+    ansible.builtin.file:
+      path: /home/connor/.cfg
+      state: directory
+      recurse: yes
+      owner: connor
+      group: connor
+  - name: checkout sudo_user
+    become: yes
+    become_method: sudo
+    become_flags: '-HE'
+    # note forcing the checkout automatically deletes all the duplicate copies of configs on the filesystem
+    ansible.builtin.shell: |
+      sudo -i -u connor bash << 'EOF'
+      set -o pipefail
+      shopt -s expand_aliases
+      alias conf='git --git-dir=/home/connor/.cfg/ --work-tree=/home/connor/'
+      conf config --local status.showUntrackedFiles no
+      conf checkout -f sudo_user
+      conf checkout
+      EOF
+      shopt -s expand_aliases
+      alias conf='git --git-dir=/home/connor/.cfg/ --work-tree=/home/connor/'
+      conf push --set-upstream origin sudo_user
+    args: 
+      chdir: "/home/connor/.cfg"
+      executable: /bin/bash
+    when: sudo_user_configstest.changed
 
-# replicate git clone for sudo_user using above method
 # set up fail2ban
 # disable ssh password login on VC'd config
+# git
 # set up basic nginx
 # proof of concept nginx serving ssg5 markdown landing page
 # record youtube walkthrough of the ansible playbook
 # spin up ansible'd webserver
-
-#  - name: test for sudo_user configs # TODO
-#    become: yes
-#    ansible.builtin.file: 
-#      path: /home/connor/.cfg
-#      state: directory
-#      owner: connor
-#      group: connor
-#    register: sudo_configstest
-##  - name: clone sudo_user configs # TODO
-##    become: yes
-##    ansible.builtin.shell: |
-##      set -o pipefail
-##      git clone --bare git@github.com:connorhodes/dotfiles-ubuntu-testvm.git --branch sudo_user --single-branch /home/connor/.cfg
-##      # Alias
-##      shopt -s expand_aliases
-##      alias config='git --git-dir=/.cfg/ --work-tree=/home/connor/'
-##      config config --local status.showUntrackedFiles no
-##      # Handle existing config
-##      mkdir -p /home/connor/.connor_default_configs_backup
-##      cd /configs
-##      config status | egrep "deleted:" | awk {'print $2'} | xargs -I{} mv {} /home/connor/.connor_default_configs_backup/
-##      # Install
-##      cd /home/connor/.cfg
-##      config checkout
-##    args: 
-##      chdir: "/home/connor/.cfg"
-##      executable: /bin/bash
-##    when: sudo_configstest.changed
-#  - name: clone sudo_user configs # TODO
-#    become: yes
-#    ansible.builtin.shell: |
-#      set -o pipefail
-#      git clone --bare git@github.com:connorhodes/dotfiles-ubuntu-testvm.git --branch sudo_user --single-branch /home/connor/.cfg
-#    args: 
-#      chdir: "/home/connor/.cfg"
-#      executable: /bin/bash
-#    when: sudo_configstest.changed
-#  - name: Recursively change ownership of a directory
-#    become: yes
-#    ansible.builtin.file:
-#      path: /home/connor/.cfg
-#      state: directory
-#      recurse: yes
-#      owner: connor
-#      group: connor
-#  - name: make directory for sudo_user config backups
-#    become: yes
-#    ansible.builtin.file:
-#      path: /home/connor/.connor_default_configs_backup
-#      state: directory
-#      recurse: yes
-#      owner: connor
-#      group: connor
-#  - name: checkout sudo_user configs
-#    become: yes
-#    ansible.builtin.shell: |
-#      sudo -i -u connor bash << 'EOF'
-#      git --git-dir=/home/connor/.cfg/ --work-tree=/home/connor/ config --local status.showUntrackedFiles no
-#      cd /home/connor/.cfg
-#      git --git-dir=/home/connor/.cfg/ --work-tree=/home/connor/ status 2>&1 | egrep "deleted:" | awk {'print $2'} | xargs -I{} mv {} /home/connor/.connor_default_configs_backup/
-#      git --git-dir=/home/connor/.cfg/ --work-tree=/home/connor/ checkout
-#      EOF
-#    args: 
-#      chdir: "/home/connor/.cfg"
-#      executable: /bin/bash
