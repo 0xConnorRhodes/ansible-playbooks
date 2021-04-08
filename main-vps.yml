@@ -27,11 +27,18 @@
         - neovim
         - git
         - unattended-upgrades
+        - fail2ban
       state: latest
       cache_valid_time: 86400
   - name: enable unattended-upgrades
     ansible.builtin.systemd:
       name: unattended-upgrades
+      state: started
+      enabled: yes
+      masked: no
+  - name: enable fail2ban
+    ansible.builtin.systemd:
+      name: fail2ban
       state: started
       enabled: yes
       masked: no
@@ -107,10 +114,6 @@
       executable: /bin/bash
     when: sudo_user_configstest.changed
 
-# set up fail2ban
-# disable ssh password login on VC'd config
-# git
 # set up basic nginx
 # proof of concept nginx serving ssg5 markdown landing page
-# record youtube walkthrough of the ansible playbook
 # spin up ansible'd webserver
