@@ -126,6 +126,7 @@
     #  single_branch: true # will be added in ansible 3.0
   - name: checkout root
     become: yes
+    # note forcing the checkout automatically deletes all the duplicate copies of configs on the filesystem
     ansible.builtin.shell: |
       set -o pipefail
       echo ".cfg" >> /.gitignore 
