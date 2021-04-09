@@ -1,0 +1,5 @@
+--- # test connectivity to servers
+- hosts: servers
+  tasks:
+  - name: ping 3 servers
+    ping:
