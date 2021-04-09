@@ -4,5 +4,14 @@
     ansible_user: root
     ansible_password: "{{ lookup('community.general.passwordstore', 'sysadmin/temp-server-root') | password_hash('sha512') }}"
   tasks:
-  - name: ping as root
-    ansible.builtin.ping:
+  - name: Add ansible user
+    ansible.builtin.user:
+      name: ansible
+      shell: /bin/bash
+      groups: sudo
+      append: yes
+  - name: Set ansible user authorized_keys
+    ansible.posix.authorized_key:
+      user: ansible
+      state: present
+      key: "{{ lookup('file', '/home/ansible/.ssh/ansible-controlnode_ed25519.pub') }}"
