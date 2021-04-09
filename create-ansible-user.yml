@@ -2,7 +2,8 @@
 - hosts: ubuntu-testvm
   vars: 
     ansible_user: root
-    ansible_password: "{{ lookup('community.general.passwordstore', 'sysadmin/temp-server-root') | password_hash('sha512') }}"
+    # if the password is not your standard one, run ansible-playbook -k and paste in the root password from the cloud provider
+    ansible_password: "{{ lookup('community.general.passwordstore', 'sysadmin/temp-server-root') }}"
   tasks:
   - name: Add ansible user
     ansible.builtin.user:
@@ -22,3 +23,17 @@
       regexp: '^ansible ALL='
       line: 'ansible ALL=(ALL) NOPASSWD: ALL'
       validate: '/usr/sbin/visudo -cf %s'
+  - name: disable ssh as root
+    lineinfile:
+      path: /etc/ssh/sshd_config
+      state: present
+      regexp: '^\#?PermitRootLogin yes'
+      line: 'PermitRootLogin no'
+  - name: Disable root password
+    user:
+      name: root
+      password: '!'
+  - name: restart ssh server
+    ansible.builtin.systemd:
+      name: sshd
+      state: restarted
