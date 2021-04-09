@@ -27,6 +27,11 @@
       update_cache: yes
       upgrade: full
 
+  - name: Set a hostname
+    become: yes
+    ansible.builtin.hostname:
+      name: vps
+
 # INSTALL PACKAGES
   - name: Install Packages
     become: yes
@@ -125,11 +130,43 @@
       chdir: "/home/connor/.cfg"
       executable: /bin/bash
     when: sudo_user_configstest.changed
-...
 
---- # set up web server
+# set up interactive server
+## tools and configs for a server I ssh into frequently
+  - name: Install Interactive Packages
+    become: yes
+    apt:
+      pkg:
+        - htop
+      state: latest
+      cache_valid_time: 86400
 
+# set up firewall
+  - name: Install firewall
+    become: yes
+    apt:
+      pkg:
+        - ufw
+      state: latest
+      cache_valid_time: 86400
+  - name: enable ufw
+    become: yes
+    ansible.builtin.systemd:
+      name: ufw
+      state: restarted
+      enabled: yes
+      masked: no
 
+# bootstrap web server
+  - name: Install firewall
+    become: yes
+    apt:
+      pkg:
+        - ufw
+      state: latest
+      cache_valid_time: 86400
+
+# set up web server
 # set up basic nginx
 # proof of concept nginx serving ssg5 markdown landing page
 # spin up ansible'd webserver
