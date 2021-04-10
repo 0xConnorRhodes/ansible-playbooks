@@ -4,6 +4,13 @@
     configs_repo: "git@github.com:0xConnorRhodes/dotfiles-main-vps.git"
   tasks:
 
+# CONFIGURE ANSIBLE USER
+  - name: "ROLE: configure_managed_ansible_user"
+    include_role:
+      name: configure_managed_ansible_user
+    vars:
+      ansible_password: "{{ lookup('community.general.passwordstore', 'sysadmin/temp-server-root') }}"
+
 # CONFIGURE USERS AND LOGIN
   - name: Disable root login
     user:
