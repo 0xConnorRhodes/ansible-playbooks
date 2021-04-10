@@ -28,18 +28,17 @@
       shell: /bin/bash
       groups: sudo
       append: yes
-  - name: Upgrade the OS (apt full-upgrade)
-    become: yes
-    apt:
-      update_cache: yes
-      upgrade: full
-
   - name: Set a hostname
     become: yes
     ansible.builtin.hostname:
       name: vps
 
 # INSTALL PACKAGES
+  - name: Upgrade the OS (apt full-upgrade)
+    become: yes
+    apt:
+      update_cache: yes
+      upgrade: full
   - name: Install Packages
     become: yes
     apt:
@@ -66,6 +65,7 @@
       masked: no
 
 # CLONE AND CHECKOUT CONFIGS
+ # TODO: refactor into an ansible role
   - name: clone root configs
     become: yes
     # because ssh-agent forwarding uses environment variables, the two lines below are necessary for become to not forget the env vars given in the initial ssh connection
@@ -139,7 +139,7 @@
     when: sudo_user_configstest.changed
 
 # set up interactive server
-## tools and configs for a server I ssh into frequently
+ # tools and configs for a server I ssh into frequently
   - name: Install Interactive Packages
     become: yes
     apt:
