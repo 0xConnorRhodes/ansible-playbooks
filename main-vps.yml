@@ -2,6 +2,7 @@
 - hosts: main-vps
   vars:
     configs_repo: "git@github.com:0xConnorRhodes/dotfiles-main-vps.git"
+    # TODO: add as variable into refactored checkout configs role
   tasks:
 
 # CONFIGURE ANSIBLE USER
