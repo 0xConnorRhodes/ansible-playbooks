@@ -1,9 +1,9 @@
 ---
 - hosts: ubuntu-testvm
-  gather_facts: no # must disable because ansible user may not be set up yet
+  gather_facts: no # must disable because ansible user may not be set up yet (see configure_managed_ansible_user)
   tasks:
-  - name: configure ansible user
-    include_role:
+  - name: "ROLE: configure ansible user"
+    include_role: 
       name: configure_managed_ansible_user
     vars:
       ansible_password: "{{ lookup('community.general.passwordstore', 'sysadmin/temp-server-root') }}"
