@@ -1,0 +1,14 @@
+---
+- hosts: ubuntu-testvm
+  gather_facts: no # must disable because ansible user may not be set up yet (see configure_managed_ansible_user)
+  vars:
+    ansible_user: "root"
+  tasks:
+  - name: test root ssh access
+    ansible.builtin.ping:
+    register: results
+    ignore_unreachable: yes
+  - name: show results
+    debug:
+      msg: "here is {{ results.skip_reason }}"
+    when: results.skip_reason is defined
