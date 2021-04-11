@@ -13,5 +13,5 @@
   - name: Print return information from the previous task
     ansible.builtin.debug:
       var: me_who
-  - name: Collect only facts returned by facter
+  - name: Gather Facts
     ansible.builtin.setup:
