@@ -66,7 +66,7 @@
       masked: no
 
 # CLONE AND CHECKOUT CONFIGS
- # TODO: refactor into an ansible role
+ # TODO: code has been refactored. test calling it as a role
   - name: clone root configs
     become: yes
     # because ssh-agent forwarding uses environment variables, the two lines below are necessary for become to not forget the env vars given in the initial ssh connection
