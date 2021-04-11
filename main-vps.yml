@@ -1,8 +1,6 @@
 --- # bootstrap main vps
-- hosts: main-vps
-  vars:
-    configs_repo: "git@github.com:0xConnorRhodes/dotfiles-main-vps.git"
-    # TODO: add as variable into refactored checkout configs role
+- hosts: ubuntu-testvm
+  gather_facts: no
   tasks:
 
 # CONFIGURE ANSIBLE USER
@@ -66,78 +64,13 @@
       masked: no
 
 # CLONE AND CHECKOUT CONFIGS
- # TODO: code has been refactored. test calling it as a role
-  - name: clone root configs
-    become: yes
-    # because ssh-agent forwarding uses environment variables, the two lines below are necessary for become to not forget the env vars given in the initial ssh connection
-    become_method: sudo
-    become_flags: '-HE'
-    ansible.builtin.git:
-      repo: "{{ configs_repo }}"
-      accept_hostkey: yes
-      dest: /.cfg
-      bare: true
-      version: root
-    register: root_configstest
-    #  single_branch: true # will be added in ansible 3.0
-  - name: checkout root
-    become: yes
-    become_method: sudo
-    become_flags: '-HE'
-    # note forcing the checkout automatically deletes all the duplicate copies of configs on the filesystem
-    ansible.builtin.shell: |
-      set -o pipefail
-      shopt -s expand_aliases
-      alias conf='git --git-dir=/.cfg --work-tree=/'
-      conf config --local status.showUntrackedFiles no
-      conf checkout -f root
-      conf checkout
-      conf push --set-upstream origin root
-    args: 
-      chdir: "/.cfg"
-      executable: /bin/bash
-    when: root_configstest.changed
-  - name: clone sudo_user configs
-    become: yes
-    become_method: sudo
-    become_flags: '-HE'
-    ansible.builtin.git:
-      repo: "{{ configs_repo }}"
-      accept_hostkey: yes
-      dest: /home/connor/.cfg
-      bare: true
-      version: sudo_user
-    register: sudo_user_configstest
-    #  single_branch: true # will be added in ansible 3.0
-  - name: change sudo_configs ownership
-    become: yes
-    ansible.builtin.file:
-      path: /home/connor/.cfg
-      state: directory
-      recurse: yes
-      owner: connor
-      group: connor
-  - name: checkout sudo_user
-    become: yes
-    become_method: sudo
-    become_flags: '-HE'
-    # note forcing the checkout automatically deletes all the duplicate copies of configs on the filesystem
-    ansible.builtin.shell: |
-      sudo -i -u connor bash << 'EOF'
-      set -o pipefail
-      shopt -s expand_aliases
-      alias conf='git --git-dir=/home/connor/.cfg/ --work-tree=/home/connor/'
-      conf config --local status.showUntrackedFiles no
-      conf checkout -f sudo_user
-      conf checkout
-      EOF
-      shopt -s expand_aliases
-      alias conf='git --git-dir=/home/connor/.cfg/ --work-tree=/home/connor/'
-      conf push --set-upstream origin sudo_user
-    args: 
-      chdir: "/home/connor/.cfg"
-      executable: /bin/bash
-    when: sudo_user_configstest.changed
+  - name: "ROLE: Clone and Checkout bare_git_repo_configs"
+    include_role:
+      name: bare_git_repo_configs
+    vars:
+      sudo_user: "connor" 
+      configs_repo: "git@github.com:0xConnorRhodes/configs.main-vps.git"
+ 
 
 # set up interactive server
  # tools and configs for a server I ssh into frequently
