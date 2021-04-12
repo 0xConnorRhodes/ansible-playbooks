@@ -101,7 +101,7 @@
     apt:
       pkg:
         - nginx
-        - python-certbot-nginx
+        - python3-certbot-nginx
       state: latest
       cache_valid_time: 86400
 
