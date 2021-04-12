@@ -11,14 +11,6 @@
       ansible_password: "{{ lookup('community.general.passwordstore', 'sysadmin/temp-server-root') }}"
 
 # CONFIGURE USERS AND LOGIN
-  - name: Disable root login
-    user:
-      name: root
-      password: '!'
-  - name: Disable ansible password
-    user:
-      name: ansible
-      password: '!'
   - name: Add the user 'connor' with a bash shell, appending the group 'sudo'
     become: yes
     ansible.builtin.user:
@@ -27,7 +19,7 @@
       shell: /bin/bash
       groups: sudo
       append: yes
-  - name: Set a hostname
+  - name: Set hostname
     become: yes
     ansible.builtin.hostname:
       name: vps
@@ -64,50 +56,55 @@
       masked: no
 
 # CLONE AND CHECKOUT CONFIGS
-  - name: "ROLE: Clone and Checkout bare_git_repo_configs"
-    include_role:
-      name: bare_git_repo_configs
-    vars:
-      sudo_user: "connor" 
-      configs_repo: "git@github.com:0xConnorRhodes/configs.main-vps.git"
- 
-
-# set up interactive server
- # tools and configs for a server I ssh into frequently
-  - name: Install Interactive Packages
-    become: yes
-    apt:
-      pkg:
-        - htop
-      state: latest
-      cache_valid_time: 86400
-
-# set up firewall
-  - name: Install firewall
-    become: yes
-    apt:
-      pkg:
-        - ufw
-      state: latest
-      cache_valid_time: 86400
-  - name: enable ufw
-    become: yes
-    ansible.builtin.systemd:
-      name: ufw
-      state: restarted
-      enabled: yes
-      masked: no
-
-# bootstrap web server
-  - name: Install firewall
-    become: yes
-    apt:
-      pkg:
-        - ufw
-      state: latest
-      cache_valid_time: 86400
+#  - name: "ROLE: Clone and Checkout bare_git_repo_configs"
+#    include_role:
+#      name: bare_git_repo_configs
+#    vars:
+#      sudo_user: "connor" 
+#      configs_repo: "git@github.com:0xConnorRhodes/configs.main-vps.git"
+# 
+#
+## set up interactive server
+# # tools and configs for a server I ssh into frequently
+#  - name: Install Interactive Packages
+#    become: yes
+#    apt:
+#      pkg:
+#        - htop
+#      state: latest
+#      cache_valid_time: 86400
+#
+## set up firewall
+#  - name: Install firewall
+#    become: yes
+#    apt:
+#      pkg:
+#        - ufw
+#      state: latest
+#      cache_valid_time: 86400
+#  - name: enable ufw
+#    become: yes
+#    ansible.builtin.systemd:
+#      name: ufw
+#      state: restarted
+#      enabled: yes
+#      masked: no
+#
+## bootstrap web server
+#  - name: Install firewall
+#    become: yes
+#    apt:
+#      pkg:
+#        - ufw
+#      state: latest
+#      cache_valid_time: 86400
 
 # set up web server
 # set up basic nginx
 # proof of concept nginx serving ssg5 markdown landing page
 # spin up ansible'd webserver
+
+# REBOOT IF REQUIRED
+  - name: "ROLE: reboot if required"
+    include_role:
+      name: debian_reboot_if_required
