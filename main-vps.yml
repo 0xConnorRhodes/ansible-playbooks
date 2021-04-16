@@ -41,6 +41,7 @@
         - htop
         - rsync
         - curl
+        - net-tools # provides route command
       state: latest
       cache_valid_time: 86400
 
