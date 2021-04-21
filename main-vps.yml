@@ -33,7 +33,7 @@
   - name: Install Packages
     become: yes
     apt:
-      pkg:
+      name:
         - neovim
         - git
         - unattended-upgrades
@@ -44,6 +44,7 @@
         - net-tools # provides route command
       state: latest
       cache_valid_time: 86400
+
 
 # ENABLE SERVICES
   - name: enable unattended-upgrades
@@ -66,6 +67,24 @@
     vars:
       sudo_user: "connor" 
       configs_repo: "git@github.com:0xConnorRhodes/configs.main-vps.git"
+
+
+# swap netplan for ifupdown
+  - name: remove netplan
+    become: yes
+    apt:
+      name: netplan.io
+      state: absent
+  - name: install ifupdown
+    become: yes
+    apt:
+      name: ifupdown
+      state: present
+    register: ifupdown_installed
+  - name: reboot to refresh network configuration
+    become: yes
+    reboot:
+    when: ifupdown_installed.changed
 
 # set up firewall
   - name: Install firewall
