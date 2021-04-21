@@ -83,17 +83,38 @@
       enabled: yes
       masked: no
 
-# bootstrap web server
-  - name: Install firewall
-    become: yes
-    apt:
-      pkg:
-        - ufw
-      state: latest
-      cache_valid_time: 86400
+# configure IP addresses with netplan
+  - name: "ROLE: configure networking with netplan"
+    include_role: 
+      name: mrlesmithjr.netplan
+    vars:
+      become: yes
+      netplan_enabled: true
+      netplan_config_file: /etc/netplan/static-ip4-6.yaml
+      netplan_configuration:
+        network:
+          version: 2
+          renderer: networkd
+          ethernets:
+            eth0:
+              dhcp4: false
+              dhcp6: false
+              accept-ra: false
+              addresses:
+                - "209.141.50.163/24"
+                - "2605:6400:0020:0f45::1/64"
+              gateway4: "209.141.50.1"
+              gateway6: "2605:6400:2:fed5::1"
+              nameservers:
+                addresses:
+                  - 1.0.0.1
+                  - 1.1.1.1 
+                  - "2606:4700:4700::1001"
+                  - "2606:4700:4700::1111"
+              routes:
+              - to: "2605:6400:2:fed5::1/128"
+                scope: link
 
-# set up web server
-# set up basic nginx
 # proof of concept nginx serving ssg5 markdown landing page
 # spin up ansible'd webserver
 
@@ -107,7 +128,7 @@
       state: latest
       cache_valid_time: 86400
 
-# REBOOT IF REQUIRED
+# REBOOT IF REQUIRED # commented
   - name: "ROLE: reboot if required"
     include_role:
       name: debian_reboot_if_required
