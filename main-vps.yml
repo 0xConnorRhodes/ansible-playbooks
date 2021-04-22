@@ -88,22 +88,6 @@
 
 
 
-# set up firewall
-  - name: Install firewall
-    become: yes
-    apt:
-      pkg:
-        - ufw
-      state: latest
-      cache_valid_time: 86400
-  - name: enable ufw
-    become: yes
-    ansible.builtin.systemd:
-      name: ufw
-      state: restarted
-      enabled: yes
-      masked: no
-
 # proof of concept nginx serving ssg5 markdown landing page
 # spin up ansible'd webserver
 
