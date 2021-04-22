@@ -22,7 +22,6 @@
     include_role:
       name: ubuntu_clean
 
-
 # CONFIGURE USERS AND LOGIN
   - name: remove ubuntu user
     become: yes
@@ -85,11 +84,6 @@
     vars:
       sudo_user: "connor" 
       configs_repo: "git@github.com:0xConnorRhodes/configs.main-vps.git"
-
-
-
-# proof of concept nginx serving ssg5 markdown landing page
-# spin up ansible'd webserver
 
 # BOOTSTRAP NGINX  
   - name: Install nginx Packages
