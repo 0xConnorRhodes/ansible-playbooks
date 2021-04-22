@@ -1,19 +1,35 @@
 --- # bootstrap main vps
-- hosts: main-vps
-  gather_facts: no
+
+# CONFIGURE ANSIBLE USER FOR LIGHTSAIL
+- hosts: lightsail-bootstrap
+  gather_facts: false
+  ignore_unreachable: true
   tasks:
-
-# NOTE: run bootstrap-lightsail.yml first if a new lightsail instance
-
-# CONFIGURE ANSIBLE USER
-  - name: "ROLE: clean"
+  - name: "ROLE: configure_managed_ansible_user"
     include_role:
       name: configure_managed_ansible_user
     vars:
       ansible_user: ubuntu
       ansible_password: "{{ lookup('community.general.passwordstore', 'sysadmin/temp-server-root') }}"
+      ansible_ssh_private_key_file: /home/ansible/.ssh/bootstrap_server.pem
+
+# CONFIGURE MAIN VPS
+- hosts: main-vps
+  gather_facts: yes
+  tasks:
+
+  - name: "ROLE: clean ubuntu of packages and services"
+    include_role:
+      name: ubuntu_clean
+
 
 # CONFIGURE USERS AND LOGIN
+  - name: remove ubuntu user
+    become: yes
+    ansible.builtin.user:
+      name: ubuntu
+      state: absent
+      remove: true # remove user's home directory
   - name: Add the user 'connor' with a bash shell, appending the group 'sudo'
     become: yes
     ansible.builtin.user:
@@ -26,8 +42,6 @@
     become: yes
     ansible.builtin.hostname:
       name: vps
-
-# REMOVE UBUNTU AWS PACKAGES
 
 # INSTALL PACKAGES
   - name: Upgrade the OS (apt full-upgrade)
@@ -46,10 +60,9 @@
         - htop
         - rsync
         - curl
-        - net-tools # provides route command
+        #- net-tools # provides route command
       state: latest
       cache_valid_time: 86400
-
 
 # ENABLE SERVICES
   - name: enable unattended-upgrades
