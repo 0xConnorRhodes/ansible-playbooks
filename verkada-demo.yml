@@ -1,18 +1,5 @@
 --- # bootstrap main vps
 
-# CONFIGURE ANSIBLE USER FOR LIGHTSAIL
-- hosts: lightsail-bootstrap
-  gather_facts: false
-  ignore_unreachable: true
-  tasks:
-  - name: "ROLE: configure_managed_ansible_user"
-    include_role:
-      name: configure_managed_ansible_user
-    vars:
-      ansible_user: ubuntu
-      ansible_password: "{{ lookup('community.general.passwordstore', 'sysadmin/temp-server-root') }}"
-      ansible_ssh_private_key_file: /home/ansible/.ssh/bootstrap_server.pem
-
 # CONFIGURE MAIN VPS
 - hosts: main-vps
   gather_facts: yes
