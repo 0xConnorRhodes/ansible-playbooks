@@ -1,0 +1,101 @@
+--- # bootstrap main vps
+
+# CONFIGURE ANSIBLE USER FOR LIGHTSAIL
+- hosts: lightsail-bootstrap
+  gather_facts: false
+  ignore_unreachable: true
+  tasks:
+  - name: "ROLE: configure_managed_ansible_user"
+    include_role:
+      name: configure_managed_ansible_user
+    vars:
+      ansible_user: ubuntu
+      ansible_password: "{{ lookup('community.general.passwordstore', 'sysadmin/temp-server-root') }}"
+      ansible_ssh_private_key_file: /home/ansible/.ssh/bootstrap_server.pem
+
+# CONFIGURE MAIN VPS
+- hosts: main-vps
+  gather_facts: yes
+  tasks:
+
+  - name: "ROLE: clean ubuntu of packages and services"
+    include_role:
+      name: ubuntu_clean
+
+# CONFIGURE USERS AND LOGIN
+  - name: remove ubuntu user
+    become: yes
+    ansible.builtin.user:
+      name: ubuntu
+      state: absent
+      remove: true # remove user's home directory
+  - name: Add the user 'connor' with a bash shell, appending the group 'sudo'
+    become: yes
+    ansible.builtin.user:
+      name: connor
+      password: "{{ lookup('community.general.passwordstore', 'sysadmin/main-vps-sudo-user') | password_hash('sha512') }}"
+      shell: /bin/bash
+      groups: sudo
+      append: yes
+  - name: Set hostname
+    become: yes
+    ansible.builtin.hostname:
+      name: vps
+
+# INSTALL PACKAGES
+  - name: Upgrade the OS (apt full-upgrade)
+    become: yes
+    apt:
+      update_cache: yes
+      upgrade: full
+  - name: Install Packages
+    become: yes
+    apt:
+      name:
+        - neovim
+        - git
+        - unattended-upgrades
+        - fail2ban
+        - htop
+        - rsync
+        - curl
+        #- net-tools # provides route command
+      state: latest
+      cache_valid_time: 86400
+
+# ENABLE SERVICES
+  - name: enable unattended-upgrades
+    ansible.builtin.systemd:
+      name: unattended-upgrades
+      state: started
+      enabled: yes
+      masked: no
+  - name: enable fail2ban
+    ansible.builtin.systemd:
+      name: fail2ban
+      state: started
+      enabled: yes
+      masked: no
+
+# CLONE AND CHECKOUT CONFIGS
+  - name: "ROLE: Clone and Checkout bare_git_repo_configs"
+    include_role:
+      name: bare_git_repo_configs
+    vars:
+      sudo_user: "connor" 
+      configs_repo: "git@github.com:0xConnorRhodes/configs.main-vps.git"
+
+# BOOTSTRAP NGINX  
+  - name: Install nginx Packages
+    become: yes
+    apt:
+      pkg:
+        - nginx
+        - python3-certbot-nginx
+      state: latest
+      cache_valid_time: 86400
+
+# REBOOT IF REQUIRED # commented
+  - name: "ROLE: reboot if required"
+    include_role:
+      name: debian_reboot_if_required
