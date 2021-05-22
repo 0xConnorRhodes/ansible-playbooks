@@ -1,0 +1,22 @@
+--- # bootstrap main vps
+
+- hosts: ubuntu-testvm
+  gather_facts: yes
+  tasks:
+
+  - name: Create file1.txt
+    file:
+      path: /home/ubuntu/file1.txt
+      state: touch
+
+
+  - name: Create file2.txt
+    file:
+      path: /home/ubuntu/file2.txt
+      state: touch
+
+
+  - name: Create file3.txt
+    file:
+      path: /home/ubuntu/file3.txt
+      state: touch
