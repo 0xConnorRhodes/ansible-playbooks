@@ -1,7 +1,7 @@
 --- # bootstrap main vps
 
 # CONFIGURE ANSIBLE USER FOR LIGHTSAIL
-- hosts: lightsail-bootstrap
+- hosts: ubuntu-testvm
   gather_facts: false
   ignore_unreachable: true
   tasks:
