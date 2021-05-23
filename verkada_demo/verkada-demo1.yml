@@ -8,16 +8,16 @@
     user:
       name: johnd
       comment: John Doe
-      uid: 1020
+      uid: 1010
       group: sudo
 
-  # - name: Add the user 'janed' with a specific uid and a primary group of 'admin'
-  #   become: yes
-  #   user:
-  #     name: janed
-  #     comment: Jane Doe
-  #     uid: 1030
-  #     group: sudo
+  - name: Add the user 'janed' with a specific uid and a primary group of 'admin'
+    become: yes
+    user:
+      name: janed
+      comment: Jane Doe
+      uid: 1030
+      group: sudo
 
   # - name: Add custom new user
   #   become: yes
