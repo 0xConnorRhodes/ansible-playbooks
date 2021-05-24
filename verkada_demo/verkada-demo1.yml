@@ -1,4 +1,4 @@
---- # bootstrap main vps
+---
 - hosts: ubuntu-testvm
   gather_facts: yes
   tasks:
@@ -8,7 +8,7 @@
     user:
       name: johnd
       comment: John Doe
-      uid: 1010
+      uid: 1020
       group: sudo
 
   - name: Add the user 'janed' with a specific uid and a primary group of 'admin'
