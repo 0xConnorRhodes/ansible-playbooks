@@ -32,7 +32,7 @@
       name: bare_git_repo_configs
     vars:
       sudo_user: "connor" 
-      configs_repo: "git@github.com:0xConnorRhodes/configs.main-vps.git"
+      configs_repo: "git@github.com:0xConnorRhodes/configs.cloudshell.git"
         
 # INSTALL PACKAGES
   - name: Upgrade the OS (apt full-upgrade)
