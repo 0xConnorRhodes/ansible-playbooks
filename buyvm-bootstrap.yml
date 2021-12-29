@@ -1,13 +1,22 @@
---- # bootstrap debian vps on frantech
+--- # bootstrap debian/ubuntu vps on frantech
+
+# first, get 
 - hosts: localhost
-  gather_facts: False
+  gather_facts: false
   vars_prompt:
 
-    - name: username
-      prompt: What is your username?
+    - name: vps_ip
+      prompt: What is the VPS IP?
       
   tasks:
 
     - name: Print a message
       ansible.builtin.debug:
-        msg: 'Username is {{ username}}'
+        msg: 'Username is {{ vps_ip }}'
+    - name: Add host to group 'just_created' with variable foo=42
+      add_host:
+        name: '{{ vps_ip }}'
+        # add human name not IP (alias?)
+        # add password from pass or from user prompt
+
+
