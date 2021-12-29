@@ -1,0 +1,13 @@
+--- # bootstrap debian vps on frantech
+- hosts: localhost
+  gather_facts: False
+  vars_prompt:
+
+    - name: username
+      prompt: What is your username?
+      
+  tasks:
+
+    - name: Print a message
+      ansible.builtin.debug:
+        msg: 'Username is {{ username}}'
