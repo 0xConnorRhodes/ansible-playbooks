@@ -13,6 +13,7 @@
     - name: Print a message
       ansible.builtin.debug:
         msg: 'Username is {{ vps_ip }}'
+
     - name: Add host to group 'just_created' with variable foo=42
       add_host:
         name: '{{ vps_ip }}'
