@@ -1,7 +1,7 @@
 --- # Configuration for my main VPS
 - hosts: cloudshell
   vars_files:
-    - $HOME/code/ansible-playbooks/host_vars/cloudshell/secret.yml
+    - /home/connor/code/ansible-playbooks/host_vars/cloudshell/secret.yml
 
   tasks:
     - import_tasks: tasks/bootstrap.yml

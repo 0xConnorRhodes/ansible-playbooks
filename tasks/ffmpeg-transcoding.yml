@@ -1,4 +1,5 @@
 - name: Install ffmpeg for debian
+  become: true
   package:
     name:
       - ffmpeg
