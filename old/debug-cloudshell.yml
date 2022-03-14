@@ -1,0 +1,20 @@
+--- # bootstrap cloudshell
+
+# CONFIGURE MAIN VPS
+- hosts: cloudshell
+  gather_facts: yes
+  tasks:
+
+# CONFIGURE USERS AND LOGIN
+  - name: Add the user 'connor' with a bash shell, appending the group 'sudo'
+    become: yes
+    ansible.builtin.user:
+      name: connor
+      password: "{{ lookup('community.general.passwordstore', 'sysadmin/main-vps-sudo-user') | password_hash('sha512') }}"
+      shell: /bin/bash
+      groups: sudo
+      append: yes
+  - name: Set hostname
+    become: yes
+    ansible.builtin.hostname:
+      name: cs
