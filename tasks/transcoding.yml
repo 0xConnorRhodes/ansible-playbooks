@@ -13,6 +13,6 @@
     name: pipx
     extra_args: --user
 
-- name: Install auto-editor with pipx
-  community.general.pipx:
-    name: auto-editor
+      #- name: Install auto-editor with pipx
+      #  community.general.pipx:
+      #    name: auto-editor
