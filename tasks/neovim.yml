@@ -1,7 +1,7 @@
 # Set up neovim
 
 - name: Install Universal Packages
-  become: yes
+  become: true
   package:
     name:
       - neovim
