@@ -7,3 +7,12 @@
       - libavfilter-dev
       - libavdevice-dev
     state: latest
+
+- name: install pipx
+  pip:
+    name: pipx
+    extra_args: --user
+
+- name: Install auto-editor with pipx
+  community.general.pipx:
+    name: auto-editor
