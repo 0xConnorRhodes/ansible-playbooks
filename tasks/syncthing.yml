@@ -1,0 +1,21 @@
+# set up syncthing
+
+- name: add syncthing apt-key
+  become: true
+  ansible.builtin.get_url:
+    url: https://syncthing.net/release-key.gpg
+    dest: /usr/share/keyrings/syncthing-archive-keyring.gpg
+
+- name: add syncthing apt_repository
+  become: true
+  apt_repository:
+    filename: syncthing
+    repo: "deb [signed-by=/usr/share/keyrings/syncthing-archive-keyring.gpg] https://apt.syncthing.net/ syncthing stable"
+    update_cache: true
+
+- name: install syncthing
+  become: true
+  package:
+    name: syncthing
+
+#TODO: enable the service, see https://www.linuxfordevices.com/tutorials/ubuntu/syncthing-install-and-setup and https://github.com/mbocquet/syncthing/blob/master/tasks/main.yml and https://github.com/mbocquet/syncthing/blob/master/defaults/main.yml for variable contents
