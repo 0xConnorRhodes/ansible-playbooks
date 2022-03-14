@@ -1,4 +1,4 @@
-- name: Install fmpeg for debian
+- name: Install ffmpeg for debian
   package:
     name:
       - ffmpeg
