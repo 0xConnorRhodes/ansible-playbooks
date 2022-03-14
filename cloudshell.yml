@@ -9,6 +9,7 @@
     - import_tasks: tasks/password-store.yml
     - import_tasks: tasks/syncthing.yml
     - import_tasks: tasks/nginx.yml
+    - import_tasks: tasks/ffmpeg-transcoding.yml
 
   post_tasks:
     - name : remove duplicate tailscale gpg key left by artis3n.tailscale

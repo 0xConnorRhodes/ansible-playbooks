@@ -1,0 +1,8 @@
+- name: Install fmpeg for debian
+  package:
+    name:
+      - ffmpeg
+      - libavformat-dev
+      - libavfilter-dev
+      - libavdevice-dev
+    state: latest
