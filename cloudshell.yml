@@ -1,0 +1,23 @@
+--- # Configuration for my main VPS
+- hosts: cloudshell
+  vars_files:
+    - $HOME/code/ansible-playbooks/host_vars/cloudshell/secret.yml
+
+  tasks:
+    - import_tasks: tasks/bootstrap.yml
+    - import_tasks: tasks/neovim.yml
+    - import_tasks: tasks/password-store.yml
+    - import_tasks: tasks/syncthing.yml
+    - import_tasks: tasks/nginx.yml
+
+  post_tasks:
+    - name : remove duplicate tailscale gpg key left by artis3n.tailscale
+      # NOTE: this is a hack to avoid fixing the error in artis3n.tailscale where it
+      # creates a duplicate gpg key entry with the deprecated apt_key method
+      become: yes
+      file:
+        path: /etc/apt/sources.list.d/pkgs_tailscale_com_stable_debian.list
+        state: absent
+
+  roles:
+    - artis3n.tailscale
