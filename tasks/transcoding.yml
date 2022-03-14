@@ -13,6 +13,11 @@
     name: pipx
     extra_args: --user
 
-      #- name: Install auto-editor with pipx
-      #  community.general.pipx:
-      #    name: auto-editor
+- name: Install collection community.network
+  community.general.ansible_galaxy_install:
+    type: collection
+    name: community.general
+
+- name: Install auto-editor with pipx
+  community.general.pipx:
+    name: auto-editor
