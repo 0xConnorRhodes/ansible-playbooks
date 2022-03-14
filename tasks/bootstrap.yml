@@ -1,0 +1,51 @@
+- name: Update packages
+  become: yes
+  apt:
+    update_cache: yes
+    upgrade: full
+
+# Install packages
+
+- name: Install Universal Packages
+  become: yes
+  package:
+    name:
+      - neovim
+      - tmux
+      - mosh
+      - htop
+      - tree
+      - curl
+      - git
+      - sudo
+      - psmisc
+      - fish
+      - ripgrep
+      - gpg
+      - python3-pip
+      - python3-venv
+      - trash-cli
+      - lsb-release
+      - make
+      - golang
+      - rsync
+      - unattended-upgrades
+      - magic-wormhole
+    state: latest
+
+# install latest version of zoxide
+
+- name: check if zoxide exists
+  stat: 
+    path: $HOME/.local/bin/zoxide
+  register: zoxide_status
+
+- name: Install Zoxide
+  shell: curl -sS https://webinstall.dev/zoxide | bash
+  when: zoxide_status.stat.exists == false
+
+# change connor user shell to fish
+- name: Set login shell of user {{ ansible_env.USER }} to `/usr/bin/fish` with `usermod`
+  ansible.builtin.command: usermod --shell /usr/bin/fish {{ ansible_env.USER }}
+  become: true
+  changed_when: false
