@@ -31,6 +31,7 @@
       - rsync
       - unattended-upgrades
       - magic-wormhole
+      - ncdu
     state: latest
 
 # install latest version of zoxide
