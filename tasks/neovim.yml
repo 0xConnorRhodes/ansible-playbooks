@@ -1,0 +1,39 @@
+# Set up neovim
+
+- name: Install Universal Packages
+  become: yes
+  package:
+    name:
+      - neovim
+    state: latest
+
+- name: create vim autoloads directory
+  file:
+    path: $HOME/.local/share/nvim/site/autoload
+    state: directory
+
+- name: create vim cache directory
+  file:
+    path: $HOME/.cache/nvim
+    state: directory
+
+- name: check if vimplug is installed
+  stat: 
+    path: $HOME/.local/share/nvim/plugged
+  register: vimplug_status
+
+- name: Install vimplug
+  get_url: 
+    url: https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    dest: $HOME/.local/share/nvim/site/autoload/plug.vim
+  when: vimplug_status.stat.exists == false
+
+- name: Run pluginstall
+  shell: nvim --headless +PlugInstall +qa
+  when: vimplug_status.stat.exists == false
+
+- name: build hexakinose
+  command: make hexakinose
+  args:
+    chdir: $HOME/.local/share/nvim/plugged/vim-hexokinase
+  when: vimplug_status.stat.exists == false
