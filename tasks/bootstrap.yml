@@ -44,6 +44,13 @@
   shell: curl -sS https://webinstall.dev/zoxide | bash
   when: zoxide_status.stat.exists == false
 
+- name: install yt-dlp
+  become: true
+  ansible.builtin.get_url:
+    url: https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
+    dest: /usr/local/bin/yt-dlp
+    mode: 'a+rx'
+
 # change connor user shell to fish
 - name: Set login shell of user {{ ansible_env.USER }} to `/usr/bin/fish` with `usermod`
   ansible.builtin.command: usermod --shell /usr/bin/fish {{ ansible_env.USER }}
