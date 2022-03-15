@@ -17,5 +17,3 @@
     repo: git clone https://github.com/andmarti1424/sc-im
     dest: /home/connor/.local/src/sc-im
     update: no
-    single_branch: yes
-    version: main
