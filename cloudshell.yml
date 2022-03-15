@@ -4,13 +4,13 @@
     - /home/connor/code/ansible-playbooks/host_vars/cloudshell/secret.yml
 
   tasks:
-    - import_tasks: tasks/bootstrap.yml
-    - import_tasks: tasks/neovim.yml
-    - import_tasks: tasks/password-store.yml
-    - import_tasks: tasks/syncthing.yml
-    - import_tasks: tasks/nginx.yml
-    - import_tasks: tasks/transcoding.yml
-    - import_tasks: tasks/sc-im.yml
+    - import_tasks: tasks/debian/bootstrap.yml
+    - import_tasks: tasks/debian/neovim.yml
+    - import_tasks: tasks/debian/password-store.yml
+    - import_tasks: tasks/debian/syncthing.yml
+    - import_tasks: tasks/debian/nginx.yml
+    - import_tasks: tasks/debian/transcoding.yml
+    - import_tasks: tasks/debian/sc-im.yml
 
   post_tasks:
     - name : remove duplicate tailscale gpg key left by artis3n.tailscale
