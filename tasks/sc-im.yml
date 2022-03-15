@@ -1,0 +1,12 @@
+# install sc-im from source
+
+- name: install sc-im dependencies
+  become: true
+  apt:
+    pkg:
+      - gcc
+      - bison
+      - libncurses5-dev
+      - libncursesw5-dev # wide character variant is best for sc-im
+      - pkg-config
+    update_cache: true
