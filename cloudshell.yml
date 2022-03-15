@@ -10,6 +10,7 @@
     - import_tasks: tasks/syncthing.yml
     - import_tasks: tasks/nginx.yml
     - import_tasks: tasks/transcoding.yml
+    - import_tasks: tasks/sc-im.yml
 
   post_tasks:
     - name : remove duplicate tailscale gpg key left by artis3n.tailscale
