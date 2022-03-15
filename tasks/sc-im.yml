@@ -17,3 +17,5 @@
     repo: git@github.com:andmarti1424/sc-im.git
     dest: /home/connor/.local/src/sc-im
     update: no
+
+# TODO: add automation for cd src/, make, sudo make install
