@@ -9,4 +9,5 @@
       - libncurses5-dev
       - libncursesw5-dev # wide character variant is best for sc-im
       - pkg-config
+      - make
     update_cache: true
