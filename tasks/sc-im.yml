@@ -11,3 +11,11 @@
       - pkg-config
       - make
     update_cache: true
+
+- name: clone sc-im from github
+  ansible.builtin.git:
+    repo: git clone https://github.com/andmarti1424/sc-im
+    dest: /home/connor/.local/src/sc-im
+    update: no
+    single_branch: yes
+    version: main
