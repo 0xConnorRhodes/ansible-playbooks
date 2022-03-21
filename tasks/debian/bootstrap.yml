@@ -33,6 +33,7 @@
       - magic-wormhole
       - ncdu
       - zsh
+      - aria2
     state: latest
 
 # install latest version of zoxide
