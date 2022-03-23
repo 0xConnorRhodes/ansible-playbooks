@@ -1,7 +1,7 @@
 --- # Configuration for my main VPS
 - hosts: vmb
   vars_files:
-    - /home/connor/code/ansible-playbooks/host_vars/vmb/secret.yml
+    - /Users/c.rhodes/code/ansible-playbooks/host_vars/vmb/secret.yml
 
   tasks:
     #    - import_tasks: tasks/debian/bootstrap.yml
