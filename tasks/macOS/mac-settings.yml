@@ -1,3 +1,4 @@
+# OS SETTINGS
 - name: show full filepath in finder
   community.general.osx_defaults:
     domain: com.apple.finder
@@ -51,3 +52,34 @@
     value: 1
     # default = 2
     state: present
+
+- name: functionally disable dock
+  community.general.osx_defaults:
+    domain: com.apple.dock
+    key: autohide-delay
+    type: float
+    value: 1000
+    # for 2 seconds until dock appears, et to 0.3
+  register: dock_disable
+ 
+- name: restart dock
+  command: killall Dock
+  when: dock_disable.changed
+
+# APP SPECIFIC MODS
+- name: disable iterm2 animations
+  community.general.osx_defaults:
+    domain: com.googlecode.iterm2
+    key: HotkeyTermAnimationDuration
+    type: float
+    value: 0.00001
+    state: present
+
+- name: force Google Chrome into light mode
+  community.general.osx_defaults:
+    domain: com.google.Chrome
+    key: NSRequiresAquaSystemAppearance
+    type: bool
+    value: True
+    state: present
+
