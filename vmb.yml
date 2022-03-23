@@ -4,4 +4,4 @@
     - /Users/c.rhodes/code/ansible-playbooks/host_vars/vmb/secret.yml
 
   tasks:
-    #    - import_tasks: tasks/debian/bootstrap.yml
+    - import_tasks: tasks/macOS/mac-settings.yml
