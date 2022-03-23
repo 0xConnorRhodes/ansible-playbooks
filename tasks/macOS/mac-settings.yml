@@ -1,2 +1,6 @@
 - name: show full filepath in finder
   command: defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+  # default = false
+- name: 
+  command: defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool NO
+  # default = true
