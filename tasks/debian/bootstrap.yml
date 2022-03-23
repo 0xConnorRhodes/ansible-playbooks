@@ -66,10 +66,6 @@
     path: $HOME/.local/share/go/bin/lf
   register: lf_installed
 
-    # TODO: print the stat.exists to see if it is true given that file exists on the server. if command doesnt support $HOME then use {{ansible current user variable}}
-- name: show value
-  ansible.builtin.debug:
-    msg: System {{lf_installed}}
-    #- name: Install lf from source
-    #  shell: env CGO_ENABLED=0 GO111MODULE=on go get -u -ldflags="-s -w" github.com/gokcehan/lf
-    #  when: lf_installed.stat.exists == True
+- name: Install lf from source
+  shell: env CGO_ENABLED=0 GO111MODULE=on go get -u -ldflags="-s -w" github.com/gokcehan/lf
+  when: lf_installed.stat.exists == False
