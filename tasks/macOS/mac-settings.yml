@@ -1,6 +1,53 @@
 - name: show full filepath in finder
-  command: defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
-  # default = false
-- name: 
-  command: defaults write NSGlobalDomain NSAutomaticWindowAnimationsEnabled -bool NO
-  # default = true
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: _FXShowPosixPathInTitle 
+    type: bool
+    value: True
+    # default = False
+    state: present
+
+- name: disable zoom animation when opening a new window of an existing application
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: NSAutomaticWindowAnimationsEnabled
+    type: bool
+    value: False
+    # default = True
+    state: present
+
+- name: disable desktop icons
+  community.general.osx_defaults:
+    domain: com.apple.finder
+    key: CreateDesktop
+    type: string
+    value: false
+    # default = true
+    state: present
+
+- name: disable press and hold function (enable repeat key on hold)
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: ApplePressAndHoldEnabled
+    type: bool
+    value: False
+    # default = True
+    state: present
+
+- name: set delay before key repeat
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: InitialKeyRepeat
+    type: int
+    value: 10
+    # default = 15
+    state: present
+
+- name: set key repeat rate
+  community.general.osx_defaults:
+    domain: NSGlobalDomain
+    key: KeyRepeat
+    type: int
+    value: 1
+    # default = 2
+    state: present
