@@ -6,3 +6,9 @@ all:
       ansible_connection: ssh
       ansible_port: 39527
       ansible_ssh_private_key: /home/connor/.ssh/connor-at-csh_ed25519
+    vmb:
+      ansible_host: 127.0.0.1
+      ansible_user: c.rhodes
+      ansible_connection: ssh
+      ansible_port: 22
+      ansible_python_interpreter: /opt/homebrew/bin/python3
