@@ -1,0 +1,9 @@
+# PIPX
+- name: install pipx
+  pip:
+    name: pipx
+    extra_args: --user
+
+- name: Install sncli
+  community.general.pipx:
+    name: sncli

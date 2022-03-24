@@ -5,3 +5,4 @@
 
   tasks:
     - import_tasks: tasks/macOS/mac-settings.yml
+    - import_tasks: tasks/macOS/mac-packages.yml
