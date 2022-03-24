@@ -82,4 +82,3 @@
     type: bool
     value: True
     state: present
-
