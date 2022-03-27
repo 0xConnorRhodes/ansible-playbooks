@@ -34,6 +34,7 @@
       - ncdu
       - zsh
       - aria2
+      - cryptsetup
     state: latest
 
 # install latest version of zoxide
