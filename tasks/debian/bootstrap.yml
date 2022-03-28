@@ -35,6 +35,7 @@
       - zsh
       - aria2
       - cryptsetup
+      - mediainfo
     state: latest
 
 # install latest version of zoxide
