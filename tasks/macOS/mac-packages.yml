@@ -1,5 +1,5 @@
 # PIPX
-- name: install pipx
+- name: Install pipx
   pip:
     name: pipx
     extra_args: --user
@@ -7,3 +7,11 @@
 - name: Install sncli
   community.general.pipx:
     name: sncli
+
+- name: Install unsilence
+  community.general.pipx:
+    name: unsilence
+
+- name: Install brainfm
+  community.general.pipx:
+    name: brainfm
