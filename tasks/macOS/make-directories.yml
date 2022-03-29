@@ -1,0 +1,11 @@
+# Create directories needed by scripts and programs
+
+- name: create .cache directory
+  file:
+    path: $HOME/.cache
+    state: directory
+
+- name: create emacs backup files directory
+  file:
+    path: $HOME/.cache/emacs_backup_files
+    state: directory
