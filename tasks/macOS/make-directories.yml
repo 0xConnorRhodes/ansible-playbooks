@@ -9,3 +9,9 @@
   file:
     path: $HOME/.cache/emacs_backup_files
     state: directory
+
+- name: symlink dwn to Downloads
+  file:
+    src: $HOME/Downloads
+    dest: $HOME/dwn
+    state: link
