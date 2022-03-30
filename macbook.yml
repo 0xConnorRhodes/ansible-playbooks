@@ -1,4 +1,4 @@
---- # Configuration for my main VPS
+--- # Configuration for my macbook
 - hosts: vmb
   vars_files:
     - /Users/c.rhodes/code/ansible-playbooks/host_vars/vmb/vars.yml
