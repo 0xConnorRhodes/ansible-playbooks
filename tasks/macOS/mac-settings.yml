@@ -100,7 +100,7 @@
 
 - name: Set NetBIOS name
   become: true
-  comunity.general.osx_defaults:
+  community.general.osx_defaults:
     domain: "/Library/Preferences/SystemConfiguration/com.apple.smb.server"
     key: "NetBIOSName"
     type: "string"
