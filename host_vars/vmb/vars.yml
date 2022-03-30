@@ -1,0 +1,11 @@
+# The macOS "user-friendly name for the system", appears mainly in GUI.
+Mac_ComputerName: "Connor's Macbook Pro"
+
+# The macOS hostname associated with hostname(1) and gethostname(3).
+Mac_HostName: "vmb"
+
+# The macOS hostname used for Bonjour-aware services on the local network.
+Mac_LocalHostName: "vmb"
+
+# The hosts Netbios advertising name.
+Mac_NetBIOSName: "vmb"
