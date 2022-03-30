@@ -85,22 +85,24 @@
 
 # CHANGE HOSTNAME AND COMPUTER NAME
 # adapted from https://github.com/feffi/ansible-macos-computername
-- name: "Get current computer names in macOS"
-  become: true
-  shell: "scutil --get {{ item }}"
-  register: macos_computername_current_names
-  changed_when: false
-  ignore_errors: true
-  failed_when: false
-  with_items:
-    - "ComputerName"
-    - "LocalHostName"
-    - "HostName"
 
-# TODO ComputerName is not working. make one shell task to explicitly set each name.
-
-- name: "Setup the computer names in macOS if applicable"
+- name: set computer name
   become: true
-  shell: "scutil --set {{ item.item }} {{ macos_computername[item.item] }}"
-  with_items: "{{ macos_computername_current_names.results }}"
-  when: macos_computername[item.item] is defined and item.stdout != macos_computername[item.item]
+  shell: 'scutil --set ComputerName "{{ Mac_ComputerName }}"'
+
+- name: Set HostName
+  become: true
+  shell: 'scutil --set HostName "{{ Mac_HostName }}"'
+
+- name: Set LocalHostName
+  become: true
+  shell: 'scutil --set LocalHostName "{{ Mac_LocalHostName }}"'
+
+- name: Set NetBIOS name
+  become: true
+  comunity.general.osx_defaults:
+    domain: "/Library/Preferences/SystemConfiguration/com.apple.smb.server"
+    key: "NetBIOSName"
+    type: "string"
+    value: "{{ Mac_NetBIOSName | upper }}"
+    state: present
