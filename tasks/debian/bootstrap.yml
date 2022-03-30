@@ -57,7 +57,7 @@
 - name: install rclone
   become: true
   shell: curl https://rclone.org/install.sh | sudo bash
-  when: rclone_status.stat.exists == true
+  when: rclone_status.stat.exists == false
 
 - name: install yt-dlp
   become: true
