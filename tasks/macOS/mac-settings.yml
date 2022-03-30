@@ -82,3 +82,25 @@
     type: bool
     value: True
     state: present
+
+# CHANGE HOSTNAME AND COMPUTER NAME
+# adapted from https://github.com/feffi/ansible-macos-computername
+- name: "Get current computer names in macOS"
+  become: true
+  shell: "scutil --get {{ item }}"
+  register: macos_computername_current_names
+  changed_when: false
+  ignore_errors: true
+  failed_when: false
+  with_items:
+    - "ComputerName"
+    - "LocalHostName"
+    - "HostName"
+
+# TODO ComputerName is not working. make one shell task to explicitly set each name.
+
+- name: "Setup the computer names in macOS if applicable"
+  become: true
+  shell: "scutil --set {{ item.item }} {{ macos_computername[item.item] }}"
+  with_items: "{{ macos_computername_current_names.results }}"
+  when: macos_computername[item.item] is defined and item.stdout != macos_computername[item.item]
