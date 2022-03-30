@@ -49,6 +49,16 @@
   shell: curl -sS https://webinstall.dev/zoxide | bash
   when: zoxide_status.stat.exists == false
 
+- name: check if rclone is installed
+  stat: 
+    path: /usr/bin/rclone
+  register: rclone_status
+
+- name: install rclone
+  become: true
+  shell: curl https://rclone.org/install.sh | sudo bash
+  when: rclone_status.stat.exists == true
+
 - name: install yt-dlp
   become: true
   ansible.builtin.get_url:
