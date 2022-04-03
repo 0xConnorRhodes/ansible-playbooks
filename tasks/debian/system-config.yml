@@ -1,0 +1,6 @@
+# change connor user shell to fish
+- name: Set login shell of user {{ ansible_env.USER }} to `/usr/bin/fish` with `usermod`
+  ansible.builtin.command: usermod --shell /usr/bin/fish {{ ansible_env.USER }}
+  become: true
+  changed_when: false
+
