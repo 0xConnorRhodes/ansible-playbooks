@@ -80,3 +80,12 @@
 - name: Install lf from source
   shell: env CGO_ENABLED=0 GO111MODULE=on go get -u -ldflags="-s -w" github.com/gokcehan/lf
   when: lf_installed.stat.exists == False
+
+- name: install pipx
+  pip:
+    name: pipx
+    extra_args: --user
+
+- name: Install organize
+  community.general.pipx:
+    name: organize-tool

@@ -15,3 +15,7 @@
 - name: Install brainfm
   community.general.pipx:
     name: brainfm
+
+- name: Install organize
+  community.general.pipx:
+    name: organize-tool
