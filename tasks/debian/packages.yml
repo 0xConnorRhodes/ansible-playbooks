@@ -37,6 +37,7 @@
       - cryptsetup
       - mediainfo
       - tldr
+      - jq
     state: latest
 
 - name: update tldr repo
