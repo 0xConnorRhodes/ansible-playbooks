@@ -1,0 +1,10 @@
+#+TITLE: Stuff not yet Automated
+
+* install gotop
+- gotop has to be installed from [[https://github.com/xxxserxxx/gotop/releases][the releases page]] or compiled from source
+** TODO find a way to download the latest .deb at the time of running the playbook
+(and optionally update the currently installed version if the newest release is newer than the installed version.)
+
+[[https://gist.github.com/steinwaywhw/a4cd19cda655b8249d908261a62687f8#file-one-liner-to-download-the-latest-release-from-github-repo-md][github discussion of solutions]]
+** currently the .deb is broken
+[[https://github.com/xxxserxxx/gotop/issues/206#issuecomment-1050192241][these manual steps]] are necessary as of [2022-04-03 Sun] but should be fixed in the next release
