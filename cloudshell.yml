@@ -4,7 +4,8 @@
     - /home/connor/code/ansible-playbooks/host_vars/cloudshell/secret.yml
 
   tasks:
-    - import_tasks: tasks/debian/bootstrap.yml
+    - import_tasks: tasks/debian/packages.yml
+    - import_tasks: tasks/debian/system-config.yml
     - import_tasks: tasks/debian/neovim.yml
     - import_tasks: tasks/debian/password-store.yml
     - import_tasks: tasks/debian/syncthing.yml

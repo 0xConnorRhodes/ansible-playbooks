@@ -36,8 +36,12 @@
       - aria2
       - cryptsetup
       - mediainfo
+      - tldr
     state: latest
 
+- name: update tldr repo
+  command: tldr --update
+ 
 # install latest version of zoxide
 
 - name: check if zoxide exists
@@ -65,12 +69,6 @@
     url: https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
     dest: /usr/local/bin/yt-dlp
     mode: 'a+rx'
-
-# change connor user shell to fish
-- name: Set login shell of user {{ ansible_env.USER }} to `/usr/bin/fish` with `usermod`
-  ansible.builtin.command: usermod --shell /usr/bin/fish {{ ansible_env.USER }}
-  become: true
-  changed_when: false
 
 # install lf from source
 - name: check if lf is installed
