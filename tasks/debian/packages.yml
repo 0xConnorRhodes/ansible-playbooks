@@ -38,6 +38,7 @@
       - mediainfo
       - tldr
       - jq
+      - fuse
     state: latest
 
 - name: update tldr repo
