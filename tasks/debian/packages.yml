@@ -89,7 +89,7 @@
 
 - name: Install organize
   community.general.pipx:
-    name: organize-tool
+    name: organize-tool[textract]
 
 - name: Install ipython
   community.general.pipx:
