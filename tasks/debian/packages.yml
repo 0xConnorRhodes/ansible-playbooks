@@ -90,3 +90,7 @@
 - name: Install organize
   community.general.pipx:
     name: organize-tool
+
+- name: Install ipython
+  community.general.pipx:
+    name: ipython
