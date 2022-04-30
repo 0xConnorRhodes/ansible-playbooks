@@ -19,3 +19,13 @@
 - name: Install organize
   community.general.pipx:
     name: organize-tool[textract]
+
+- name: check if rclone is installed
+  stat: 
+    path: /usr/local/bin/rclone
+  register: rclone_status
+
+- name: install rclone
+  become: true
+  shell: curl https://rclone.org/install.sh | sudo bash
+  when: rclone_status.stat.exists == false
