@@ -15,6 +15,7 @@
 - name: clone sc-im from github
   ansible.builtin.git:
     repo: git@github.com:andmarti1424/sc-im.git
+    key_file: /home/connor/.ssh/connor-at-csh_ed25519
     dest: /home/connor/.local/src/sc-im
     update: no
 
