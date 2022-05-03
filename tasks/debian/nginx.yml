@@ -6,9 +6,9 @@
     name: nginx
     update_cache: true
 
-- name: enable and start nginx service
-  become: true
-  systemd:
-    name: nginx
-    state: started
-    enabled: true
+      #- name: enable and start nginx service
+      #  become: true
+      #  systemd:
+      #    name: nginx
+      #    state: started
+      #    enabled: true
