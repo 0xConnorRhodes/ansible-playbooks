@@ -16,9 +16,17 @@
   community.general.pipx:
     name: brainfm
 
+- name: Install auto-editor
+  community.general.pipx:
+    name: auto-editor
+
 - name: Install organize
   community.general.pipx:
     name: organize-tool[textract]
+
+- name: Install termdown
+  community.general.pipx:
+    name: termdown
 
 - name: check if rclone is installed
   stat: 
