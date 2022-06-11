@@ -34,11 +34,14 @@
       - ncdu
       - zsh
       - aria2
+      - bat
       - cryptsetup
       - mediainfo
       - tldr
       - jq
       - fuse
+      - fzf
+      - fd-find
     state: latest
 
 - name: update tldr repo
