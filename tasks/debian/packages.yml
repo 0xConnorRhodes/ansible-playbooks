@@ -42,6 +42,7 @@
       - fuse
       - fzf
       - fd-find
+      - bzip2
     state: latest
 
 - name: update tldr repo
