@@ -12,3 +12,8 @@ all:
       ansible_connection: ssh
       ansible_port: 22
       ansible_python_interpreter: /opt/homebrew/bin/python3
+    tablet:
+      ansible_host: 100.69.218.111
+      ansible_user: u0_a163
+      ansible_connection: ssh
+      ansible_port: 8022
