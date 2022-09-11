@@ -1,0 +1,67 @@
+--- 
+# ansible playbook to bootstrap cloudshell on ubuntu 22.04
+# the stage1 playbook runs with the root user and sets things up for the connor user later
+
+- name: 'bootstrap cloudshell (stage 1)'
+  hosts: cloudshell_stage1
+  remote_user: root
+  vars_files:
+    #- host_vars/cloudshell/vars.yml # placeholder
+    - host_vars/cloudshell/secret.yml
+    - host_vars/cloudshell/packages.yml
+
+  pre_tasks: # pre_tasks will run before the roles. important because roles depend on packages and hostname
+
+  - name: Set hostname
+    ansible.builtin.hostname:
+      name: csh
+
+  - name: Update packages
+    become: yes
+    apt:
+      update_cache: yes
+      upgrade: full
+      autoremove: true
+
+  - name: create 'connor' user
+    ansible.builtin.user:
+      name: connor
+      password: "{{ csh_user_password }}"
+      shell: /bin/bash
+      groups: sudo # add new groups like group1,group2,etc
+      append: true
+
+  - name: install packages
+    package:
+      name: "{{ install_packages }}"
+      state: latest
+
+  - name: install yadm
+    get_url:
+      url: https://github.com/TheLocehiliosan/yadm/raw/master/yadm
+      dest: /usr/local/bin/yadm
+      mode: '0755'
+
+  roles:
+    - role: geerlingguy.docker
+      vars:
+        # these options ensure you can use `docker compose`
+        docker_install_compose_plugin: true
+        docker_compose_package: docker-compose-plugin
+        docker_compose_package_state: present
+        docker_users:
+          - connor # handles adding connor to the docker group
+        # note: must use `su - connor` or reboot to have access to docker without sudo
+
+    - role: artis3n.tailscale
+
+  post_tasks:
+
+- name: Set up root configs
+  ansible.builtin.import_playbook: factors/root_configs.yml
+
+- name: Configure Firewall
+  ansible.builtin.import_playbook: factors/firewalld.yml
+
+- name: Reboot Server
+  ansible.builtin.import_playbook: factors/reboot.yml
