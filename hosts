@@ -1,0 +1,20 @@
+all:
+  hosts:
+    cloudshell:
+      ansible_host:
+      ansible:user: 
+      ansible_connection: ssh
+      ansible_port: 
+      ansible_ssh_private_key:
+    cloudshell_stage1:
+      ansible_host:
+      ansible_user: root
+      ansible_connection: ssh
+      ansible_port: 
+      ansible_ssh_private_key:
+    gc_vps:
+      ansible_host:
+      ansible_user:
+      ansible_connection: ssh
+      ansible_port: 
+      ansible_ssh_private_key: 
