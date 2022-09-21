@@ -57,11 +57,76 @@
 
   post_tasks:
 
-- name: Set up root configs
-  ansible.builtin.import_playbook: factors/root_configs.yml
+  # Configure the firewall
 
-- name: Configure Firewall
-  ansible.builtin.import_playbook: factors/firewalld.yml
+  - name: enable firewalld
+    ansible.builtin.systemd:
+      name: firewalld
+      enabled: true
 
-- name: Reboot Server
-  ansible.builtin.import_playbook: factors/reboot.yml
+  - name: disable dhcpv6 in public zone
+    ansible.posix.firewalld:
+      service: dhcpv6-client
+      permanent: true
+      state: disabled
+      zone: public
+
+  - name: allow mosh in public zone
+    ansible.posix.firewalld:
+      service: mosh
+      state: enabled
+      permanent: true
+      zone: public
+
+  - name: add tailscale interface into trusted zone
+    ansible.posix.firewalld:
+      interface: tailscale0
+      zone: trusted
+      permanent: true
+      state: enabled
+
+  - name: allow ssh in external zone
+    ansible.posix.firewalld:
+      service: ssh
+      state: enabled
+      permanent: true
+      zone: external
+
+  - name: allow mosh in external zone
+    ansible.posix.firewalld:
+      service: mosh
+      state: enabled
+      permanent: true
+      zone: external
+
+  - name: allow https in external zone
+    ansible.posix.firewalld:
+      service: https
+      state: enabled
+      permanent: true
+      zone: external
+
+  - name: enable knockd
+    ansible.builtin.systemd:
+      name: knockd
+      enabled: true
+
+  - name: create directory for cron scripts
+    ansible.builtin.file:
+      path: /usr/local/cron
+      state: directory
+
+  - name: copy cloudflare zone script to the server
+    ansible.builtin.copy:
+      src: configs/cloudshell/cloudflare/firewalld.allow-cloudflare.sh
+      dest: /usr/local/cron/firewalld.allow-cloudflare.sh
+      mode: '700'
+
+  - name: run script to build cloudflare zone
+    ansible.builtin.command: /usr/local/cron/firewalld.allow-cloudflare.sh
+
+  # TODO: set up root configs and config repo
+
+  - name: Reboot
+    ansible.builtin.reboot:
+      msg: Rebooting
