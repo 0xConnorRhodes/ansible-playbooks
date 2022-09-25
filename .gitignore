@@ -1,6 +1,7 @@
 hosts
 secret.yml
 configs/ansible_control_node
+configs/cloudshell/ssh
 configs/cloudshell/root/.ssh
 configs/cloudshell/netplan/01-netcfg.yaml
 configs/cloudshell/cloudflare/firewalld.prune-external-zone-ips.sh
