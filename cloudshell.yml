@@ -127,10 +127,16 @@
 
   # Set up root configs
 
-  - name: Copy Netplan Config
+  - name: copy netplan config
     ansible.builtin.copy:
       src: configs/cloudshell/netplan/01-netcfg.yaml
       dest: /etc/netplan/01-netcfg.yaml
+
+#  - name: Copy ssh config
+#    ansible.builtin.copy:
+#      src: configs/cloudshell/ssh/sshd_config
+#      dest: /etc/ssh/sshd_config
+
 
   - name: copy root bashrc
     ansible.builtin.copy:
@@ -164,6 +170,16 @@
       yadm --yadm-dir /etc/yadm reset
       yadm --yadm-dir /etc/yadm checkout "/"
 
-  - name: Reboot
-    ansible.builtin.reboot:
-      msg: Rebooting
+  # TODO: Set up connor user
+
+  - name: copy connor user authorized_keys
+    ansible.builtin.copy:
+      src: configs/cloudshell/connor/.ssh/authorized_keys
+      dest: /home/connor/.ssh/authorized_keys
+      owner: connor
+      group: connor
+      mode: '600'
+
+#  - name: Reboot
+#    ansible.builtin.reboot:
+#      msg: Rebooting
