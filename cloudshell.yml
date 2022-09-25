@@ -125,7 +125,38 @@
   - name: run script to build cloudflare zone
     ansible.builtin.command: /usr/local/cron/firewalld.allow-cloudflare.sh
 
-  # TODO: set up root configs and config repo
+  # Set up root configs
+
+  - name: Copy Netplan Config
+    ansible.builtin.copy:
+      src: configs/cloudshell/netplan/01-netcfg.yaml
+      dest: /etc/netplan/01-netcfg.yaml
+
+  - name: copy root bashrc
+    ansible.builtin.copy:
+      src: configs/cloudshell/root/.bashrc
+      dest: /root/.bashrc
+
+  - name: copy root gitconfig
+    ansible.builtin.copy:
+      src: configs/cloudshell/root/.gitconfig
+      dest: /root/.gitconfig
+
+  - name: copy root private key
+    ansible.builtin.copy:
+      src: configs/cloudshell/root/.ssh/id_ed25519
+      dest: /root/.ssh/id_ed25519
+      mode: '600'
+
+  - name: copy root public key
+    ansible.builtin.copy:
+      src: configs/cloudshell/root/.ssh/id_ed25519.pub
+      dest: /root/.ssh/id_ed25519.pub
+
+  - name: copy known hosts for config repo
+    ansible.builtin.copy:
+      src: configs/cloudshell/root/.ssh/known_hosts
+      dest: /root/.ssh/known_hosts
 
   - name: Reboot
     ansible.builtin.reboot:
