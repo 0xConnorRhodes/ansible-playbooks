@@ -5,3 +5,4 @@ configs/cloudshell/ssh
 configs/cloudshell/root/.ssh
 configs/cloudshell/netplan/01-netcfg.yaml
 configs/cloudshell/cloudflare/firewalld.prune-external-zone-ips.sh
+configs/cloudshell/connor/.ssh

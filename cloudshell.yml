@@ -170,7 +170,7 @@
       yadm --yadm-dir /etc/yadm reset
       yadm --yadm-dir /etc/yadm checkout "/"
 
-  # TODO: Set up connor user
+  # set up connor user
 
   - name: copy connor user authorized_keys
     ansible.builtin.copy:
@@ -180,6 +180,18 @@
       group: connor
       mode: '600'
 
-#  - name: Reboot
-#    ansible.builtin.reboot:
-#      msg: Rebooting
+  - name: copy connor user ssh private key
+    ansible.builtin.copy:
+      src: configs/cloudshell/connor/.ssh/id_ed25519
+      dest: /home/connor/.ssh/id_ed25519
+      owner: connor
+      group: connor
+      mode: '600'
+
+  - name: copy connor user ssh public key
+    ansible.builtin.copy:
+      src: configs/cloudshell/connor/.ssh/id_ed25519.pub
+      dest: /home/connor/.ssh/id_ed25519.pub
+      owner: connor
+      group: connor
+      mode: '644'
