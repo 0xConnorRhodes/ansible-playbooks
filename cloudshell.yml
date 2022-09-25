@@ -158,6 +158,12 @@
       src: configs/cloudshell/root/.ssh/known_hosts
       dest: /root/.ssh/known_hosts
 
+  - name: clone, reset, and checkout yadm
+    ansible.builtin.shell: |
+      yadm --yadm-dir /etc/yadm clone -w / "{{ csh_config_repo }}"
+      yadm --yadm-dir /etc/yadm reset
+      yadm --yadm-dir /etc/yadm checkout "/"
+
   - name: Reboot
     ansible.builtin.reboot:
       msg: Rebooting
