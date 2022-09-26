@@ -137,7 +137,6 @@
       src: configs/cloudshell/ssh/sshd_config
       dest: /etc/ssh/sshd_config
 
-
   - name: copy root bashrc
     ansible.builtin.copy:
       src: configs/cloudshell/root/.bashrc
