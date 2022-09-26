@@ -219,6 +219,12 @@
       mode: '600'
 
   - name: clone, reset, and checkout yadm
+    become: true
+    become_user: connor
+    become_method: su
+    become_flags: '--login'
+    vars:
+      ansible_become_pass: "{{ csh_user_password }}"
     ansible.builtin.shell: |
       yadm clone "{{ dotfiles_repo }}"
       yadm checkout
