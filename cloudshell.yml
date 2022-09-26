@@ -71,6 +71,13 @@
       state: disabled
       zone: public
 
+  - name: allow ssh in public zone
+    ansible.posix.firewalld:
+      port: "{{ ssh_port}}"
+      state: enabled
+      permanent: true
+      zone: public
+
   - name: allow mosh in public zone
     ansible.posix.firewalld:
       service: mosh
@@ -87,7 +94,7 @@
 
   - name: allow ssh in external zone
     ansible.posix.firewalld:
-      service: ssh
+      port: "{{ ssh_port}}"
       state: enabled
       permanent: true
       zone: external
