@@ -216,6 +216,6 @@
       yadm clone "{{ dotfiles_repo }}"
       yadm checkout
 
-   - name: Reboot
-     ansible.builtin.reboot:
-       msg: Rebooting
+  - name: Reboot
+    ansible.builtin.reboot:
+      msg: Rebooting
