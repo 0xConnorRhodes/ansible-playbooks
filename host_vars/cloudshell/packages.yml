@@ -27,3 +27,4 @@ install_packages:
  - firewalld
  - knockd
  - cargo
+ - htop
