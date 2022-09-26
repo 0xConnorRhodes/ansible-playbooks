@@ -39,8 +39,3 @@
   - name: Install Zoxide
     shell: curl -sS https://webinstall.dev/zoxide | bash
     when: zoxide_status.stat.exists == false
-
-  - name: install tealdeer
-    community.general.cargo:
-      name: tealdeer
-
