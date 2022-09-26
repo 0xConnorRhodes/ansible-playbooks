@@ -73,7 +73,7 @@
 
   - name: allow ssh in public zone
     ansible.posix.firewalld:
-      port: "{{ ssh_port}}"
+      port: "{{ ssh_port }}/tcp"
       state: enabled
       permanent: true
       zone: public
@@ -94,7 +94,7 @@
 
   - name: allow ssh in external zone
     ansible.posix.firewalld:
-      port: "{{ ssh_port}}"
+      port: "{{ ssh_port }}/tcp"
       state: enabled
       permanent: true
       zone: external
@@ -223,6 +223,6 @@
       yadm clone "{{ dotfiles_repo }}"
       yadm checkout
 
-  - name: Reboot
-    ansible.builtin.reboot:
-      msg: Rebooting
+  - name: Reboot server
+    ansible.builtin.command: reboot
+    ignore_errors: true
