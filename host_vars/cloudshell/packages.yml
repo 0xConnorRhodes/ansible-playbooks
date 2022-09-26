@@ -26,3 +26,4 @@ install_packages:
  - fd-find
  - firewalld
  - knockd
+ - cargo
