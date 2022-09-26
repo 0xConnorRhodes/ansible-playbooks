@@ -132,10 +132,10 @@
       src: configs/cloudshell/netplan/01-netcfg.yaml
       dest: /etc/netplan/01-netcfg.yaml
 
-#  - name: Copy ssh config
-#    ansible.builtin.copy:
-#      src: configs/cloudshell/ssh/sshd_config
-#      dest: /etc/ssh/sshd_config
+  - name: Copy ssh config
+    ansible.builtin.copy:
+      src: configs/cloudshell/ssh/sshd_config
+      dest: /etc/ssh/sshd_config
 
 
   - name: copy root bashrc
@@ -172,6 +172,14 @@
 
   # set up connor user
 
+  - name: create .ssh directory and set permissions
+    ansible.builtin.file:
+      path: /home/connor/.ssh
+      state: directory
+      owner: connor
+      group: connor
+      mode: '700'
+
   - name: copy connor user authorized_keys
     ansible.builtin.copy:
       src: configs/cloudshell/connor/.ssh/authorized_keys
@@ -180,10 +188,10 @@
       group: connor
       mode: '600'
 
-  - name: copy connor user ssh private key
+  - name: copy connor user known_hosts
     ansible.builtin.copy:
-      src: configs/cloudshell/connor/.ssh/id_ed25519
-      dest: /home/connor/.ssh/id_ed25519
+      src: configs/cloudshell/connor/.ssh/known_hosts
+      dest: /home/connor/.ssh/known_hosts
       owner: connor
       group: connor
       mode: '600'
@@ -195,3 +203,20 @@
       owner: connor
       group: connor
       mode: '644'
+
+  - name: copy connor user ssh private key
+    ansible.builtin.copy:
+      src: configs/cloudshell/connor/.ssh/id_ed25519
+      dest: /home/connor/.ssh/id_ed25519
+      owner: connor
+      group: connor
+      mode: '600'
+
+  - name: clone, reset, and checkout yadm
+    ansible.builtin.shell: |
+      yadm clone "{{ dotfiles_repo }}"
+      yadm checkout
+
+   - name: Reboot
+     ansible.builtin.reboot:
+       msg: Rebooting
