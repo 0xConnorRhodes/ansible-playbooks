@@ -28,3 +28,6 @@ install_packages:
  - knockd
  - cargo
  - htop
+ - fd-find
+ - fzf
+ - sanoid
