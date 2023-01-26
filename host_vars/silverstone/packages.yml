@@ -17,3 +17,5 @@ install_packages:
  - fzf
  - fd-find
  - htop
+ - zoxide
+ - sanoid
