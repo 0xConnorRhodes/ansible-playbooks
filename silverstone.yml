@@ -11,26 +11,30 @@
   pre_tasks: # pre_tasks will run before the roles. important because roles depend on packages and hostname
 
   - name: Update packages
+    become: true
     apt:
       update_cache: yes
       upgrade: full
       autoremove: true
 
   - name: create 'connor' user
+    become: true
     ansible.builtin.user:
       name: connor
-      password: "{{ csh_user_password }}"
+      password: "{{ silverstone_user_password }}"
       shell: /bin/bash
       groups: sudo # add new groups like group1,group2,etc
       append: true
 
   - name: install packages
+    become: true
     package:
       name: "{{ install_packages }}"
       state: latest
 
   roles:
     - role: geerlingguy.docker
+      become: true
       vars:
         # these options ensure you can use `docker compose`
         docker_install_compose_plugin: true
@@ -43,5 +47,6 @@
   post_tasks:
 
   - name: Reboot server
+    become: true
     ansible.builtin.command: reboot
     ignore_errors: true
