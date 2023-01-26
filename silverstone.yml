@@ -48,7 +48,22 @@
     - role: ironicbadger.proxmox_nag_removal
       become: true
 
+   #- role: danielrolls.nix
+   #  become: true
+
   post_tasks:
+
+  - name: install nix packages
+    shell: |
+      /nix/var/nix/profiles/default/bin/nix-env -iA \
+        nixpkgs.rclone \
+        nixpkgs.distrobox \
+        nixpkgs.lf \
+        nixpkgs.lazydocker \
+        nixpkgs.gotop
+    args:
+      executable: /bin/bash
+
 
   - name: Reboot server
     become: true
