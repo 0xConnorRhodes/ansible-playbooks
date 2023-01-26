@@ -1,0 +1,18 @@
+install_packages:
+ - sudo
+ - tree
+ - curl
+ - git
+ - fish
+ - neovim
+ - ripgrep
+ - tmux
+ - mosh
+ - rsync
+ - magic-wormhole
+ - ncdu
+ - aria2
+ - bat
+ - mediainfo
+ - fzf
+ - fd-find
