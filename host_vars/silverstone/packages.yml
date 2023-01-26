@@ -16,3 +16,4 @@ install_packages:
  - mediainfo
  - fzf
  - fd-find
+ - htop
