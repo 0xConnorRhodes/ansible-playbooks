@@ -33,6 +33,7 @@
       state: latest
 
   roles:
+
     - role: geerlingguy.docker
       become: true
       vars:
@@ -43,6 +44,9 @@
         docker_users:
           - connor # handles adding connor to the docker group
         # note: must use `su - connor` or reboot to have access to docker without sudo
+
+    - role: ironicbadger.proxmox_nag_removal
+      become: true
 
   post_tasks:
 
