@@ -4,6 +4,4 @@ collections:
 - ansible.posix
 
 roles:
-  - name: artis3n.tailscale
   - name: geerlingguy.docker
-  - name: ironicbadger.proxmox_nag_removal
