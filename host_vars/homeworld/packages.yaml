@@ -1,3 +1,5 @@
 install_packages: 
   - screen
   - aria2
+  - tree
+  - neovim
