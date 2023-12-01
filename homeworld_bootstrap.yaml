@@ -1,0 +1,58 @@
+---
+- name: Bootstrap home server default proxmox install as root
+  hosts: homeworld_root
+  vars_files:
+    - host_vars/homeworld/secret.yaml
+
+  pre_tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Upgrade packages
+      apt:
+        upgrade: safe
+        autoremove: yes
+
+    - name: Install sudo
+      package:
+        name: sudo
+        state: present
+
+    - name: Create user
+      user:
+        name: "{{ user }}"
+        password: "{{ password }}"
+        state: present
+        createhome: true
+        shell: /bin/bash
+        groups: sudo
+
+  roles:
+    - role: geerlingguy.docker
+      vars:
+        docker_install_compose_plugin: true
+        docker_compose_package: docker-compose-plugin
+        docker_compose_package_state: present
+        docker_users:
+          - "{{ user }}"
+
+
+  post_tasks:
+    - name: Ensure user is in the docker group
+      user:
+        name: connor
+        groups: docker
+        append: yes
+
+    - name: Copy sshd_config file - DISABLES SSH AS ROOT
+      copy:
+        src: configs/homeworld/sshd_config
+        dest: /etc/ssh/sshd_config
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Reboot server
+      ansible.builtin.command: reboot
+      ignore_errors: true
