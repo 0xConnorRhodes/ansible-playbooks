@@ -13,3 +13,4 @@ install_packages:
   - fd-find
   - ripgrep
   - bat
+  - ffmpeg
