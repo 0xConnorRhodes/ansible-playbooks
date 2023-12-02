@@ -3,3 +3,7 @@ install_packages:
   - aria2
   - tree
   - neovim
+  - zoxide
+  - fzf
+  - mosh
+  - lf
