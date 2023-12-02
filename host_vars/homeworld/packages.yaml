@@ -8,3 +8,4 @@ install_packages:
   - mosh
   - lf
   - make
+  - nfs-kernel-server

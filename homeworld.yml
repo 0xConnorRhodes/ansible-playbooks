@@ -138,3 +138,18 @@
         pveum aclmod / -user '{{ proxmox_user }}'@pve -role Administrator
         pveum aclmod / -user '{{ proxmox_user }}'@pve -role PVEAdmin
         pveum aclmod / -user '{{ proxmox_user }}'@pve -role PVEVMAdmin
+
+    - name: 'copy nfs exports config'
+      become: true
+      copy:
+        src: configs/homeworld/nfs-exports
+        dest: /etc/exports
+      notify:
+        - Restart NFS service
+
+  handlers:
+    - name: Restart NFS service
+      become: true
+      service:
+        name: nfs-kernel-server
+        state: restarted
