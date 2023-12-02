@@ -12,3 +12,4 @@ install_packages:
   - fish
   - fd-find
   - ripgrep
+  - bat
