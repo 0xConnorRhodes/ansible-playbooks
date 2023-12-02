@@ -111,3 +111,24 @@
       community.docker.docker_network:
         name: caddy_net
         state: present
+
+    - name: 'Create proxmox user for web UI'
+      become: true
+      command: pveum useradd '{{ proxmox_user }}'@pve
+      ignore_errors: true
+
+    - name: Copy set-proxmox-pass script to server
+      copy:
+        src: configs/homeworld/set-proxmox-pass.sh
+        dest: /tmp/set-proxmox-pass.sh
+        mode: "a+x"
+
+    - name: Execute script
+      become: true
+      command: /tmp/set-proxmox-pass.sh
+
+    - name: Remove script
+      file:
+        path: /tmp/set-proxmox-pass.sh
+        state: absent
+
