@@ -132,3 +132,9 @@
         path: /tmp/set-proxmox-pass.sh
         state: absent
 
+    - name: 'set proxmox user permissions'
+      become: true
+      shell: |
+        pveum aclmod / -user '{{ proxmox_user }}'@pve -role Administrator
+        pveum aclmod / -user '{{ proxmox_user }}'@pve -role PVEAdmin
+        pveum aclmod / -user '{{ proxmox_user }}'@pve -role PVEVMAdmin
