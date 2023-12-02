@@ -9,3 +9,6 @@ install_packages:
   - lf
   - make
   - nfs-kernel-server
+  - fish
+  - fd-find
+  - ripgrep
