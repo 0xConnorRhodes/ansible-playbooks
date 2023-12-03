@@ -14,3 +14,5 @@ install_packages:
   - ripgrep
   - bat
   - ffmpeg
+  - python3-pip
+  - pipx
