@@ -16,3 +16,4 @@ install_packages:
   - ffmpeg
   - python3-pip
   - pipx
+  - mediainfo
