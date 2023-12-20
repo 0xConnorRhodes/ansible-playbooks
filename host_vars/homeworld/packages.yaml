@@ -17,3 +17,4 @@ install_packages:
   - python3-pip
   - pipx
   - mediainfo
+  - unzip
