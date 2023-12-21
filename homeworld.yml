@@ -147,6 +147,19 @@
       notify:
         - Restart NFS service
 
+    - name: 'clone my sysops-scripts'
+      git:
+        repo: https://github.com/0xConnorRhodes/sysops-scripts.git
+        dest: ~/code/sysops-scripts
+        version: main
+
+    - name: 'switch repo to ssh access'
+      replace:
+        path: ~/code/sysops-scripts/.git/config
+        regexp: '^(\s*url\s*=\s*)https://github.com/0xConnorRhodes/sysops-scripts.git$'
+        replace: '\1git@github.com:0xConnorRhodes/sysops-scripts.git'
+
+
   handlers:
     - name: Restart NFS service
       become: true
