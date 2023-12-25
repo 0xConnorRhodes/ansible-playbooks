@@ -159,6 +159,13 @@
         regexp: '^(\s*url\s*=\s*)https://github.com/0xConnorRhodes/sysops-scripts.git$'
         replace: '\1git@github.com:0xConnorRhodes/sysops-scripts.git'
 
+    - name: 'add podcast_convert.py to crontab'
+      cron:
+        name: "podcast_convert"
+        minute: "30"
+        hour: "*"
+        job: "/home/{{ user }}/code/sysops-scripts/podcast_convert.py"
+
 
   handlers:
     - name: Restart NFS service
