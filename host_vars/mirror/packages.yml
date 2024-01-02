@@ -1,0 +1,9 @@
+install_packages:
+  - neovim
+  - fzf
+  - fish
+  - fd-find
+  - ripgrep
+  - bat
+  - mediainfo
+  - unzip

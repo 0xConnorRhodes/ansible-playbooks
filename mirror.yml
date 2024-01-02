@@ -1,0 +1,25 @@
+---
+- name: Configure mirror VM
+  hosts: mirror
+  vars_files:
+    - host_vars/mirror/packages.yml
+    - host_vars/mirror/secrets.yml
+
+
+  tasks:
+    - name: Update apt cache
+      become: true
+      apt:
+        update_cache: yes
+
+    - name: Upgrade packages
+      become: true
+      apt:
+        upgrade: safe
+        autoremove: yes
+
+    - name: Install packages
+      become: true
+      package:
+        name: "{{ install_packages}}"
+        state: present
