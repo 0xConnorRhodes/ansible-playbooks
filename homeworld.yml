@@ -2,7 +2,8 @@
 - name: Configure homeworld server
   hosts: homeworld
   vars_files:
-    - host_vars/homeworld/secret.yaml
+    - host_vars/homeworld/secrets.yml
+    - host_vars/homeworld/packages.yml
 
 
   tasks:
