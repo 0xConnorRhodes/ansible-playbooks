@@ -23,6 +23,11 @@
         name: "{{ install_packages}}"
         state: present
 
+    - name: 'install python packages'
+      community.general.pipx:
+        name: ansible-core # TODO: add for loop to iterate over a list of pipx packages stored in a host_var
+        state: present
+
     - name: Check if just is installed
       stat:
         path: "/usr/local/bin/just"
