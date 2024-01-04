@@ -83,3 +83,30 @@
       pause:
         prompt: "Press Enter to continue..."
       when: ssh_key_exists.stat.exists == false
+
+    - name: 'auto.master nfs config'
+      become: true
+      lineinfile:
+        path: /etc/auto.master
+        line: "/mnt/nfs /etc/auto.nfs --ghost --timeout=60"
+        insertafter: EOF
+
+    - name: 'Create /mnt/nfs directory'
+      become: true
+      file:
+        path: /mnt/nfs
+        state: directory
+
+    - name: 'Copy auto.nfs file'
+      become: true
+      copy:
+        src: configs/mirror/auto.nfs
+        dest: /etc/auto.nfs
+
+    - name: 'Enable/restart autofs.service'
+      become: true
+      systemd:
+        name: autofs.service
+        state: restarted
+        enabled: yes
+
