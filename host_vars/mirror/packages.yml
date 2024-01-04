@@ -1,4 +1,4 @@
-install_packages:
+apt_packages:
   - neovim
   - fzf
   - fish
@@ -7,3 +7,4 @@ install_packages:
   - bat
   - mediainfo
   - unzip
+  - curl
