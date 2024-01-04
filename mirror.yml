@@ -18,10 +18,10 @@
         upgrade: safe
         autoremove: yes
 
-    - name: 'Install packages'
+    - name: 'Install apt packages'
       become: true
       package:
-        name: "{{ install_packages}}"
+        name: "{{ apt_packages}}"
         state: present
 
     - name: 'Install chezmoi with snap'
@@ -29,3 +29,57 @@
       snap:
         name: chezmoi
         classic: true
+
+    - name: Check if just is installed
+      stat:
+        path: "/usr/local/bin/just"
+      register: just_exists
+
+    - name: Download just install script
+      get_url:
+        url: https://just.systems/install.sh
+        dest: /tmp/install.sh
+      when: just_exists.stat.exists == false
+
+    - name: Make the script executable
+      file:
+        path: /tmp/install.sh
+        mode: +x
+      when: just_exists.stat.exists == false
+
+    - name: Run just install script
+      become: true
+      command: /tmp/install.sh --to /usr/local/bin
+      when: just_exists.stat.exists == false
+
+    - name: Install magic wormhole
+      become: true
+      get_url:
+        url: https://github.com/magic-wormhole/magic-wormhole.rs/releases/download/0.6.0/wormhole-rs
+        dest: /usr/local/bin/wormhole-rs
+        mode: "a+x"
+
+    - name: Check if SSH key exists
+      stat:
+        path: "~/.ssh/id_ed25519"
+      register: ssh_key_exists
+
+    - name: Generate SSH key if it doesn't exist
+      command:
+        cmd: ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
+      when: ssh_key_exists.stat.exists == false
+
+    - name: Read public key
+      shell: cat ~/.ssh/id_ed25519.pub
+      register: file_content
+      when: ssh_key_exists.stat.exists == false
+
+    - name: Print public key to terminal
+      debug:
+        msg: "{{ file_content.stdout }}"
+      when: ssh_key_exists.stat.exists == false
+
+    - name: 'Pause: add public key to GitHub'
+      pause:
+        prompt: "Press Enter to continue..."
+      when: ssh_key_exists.stat.exists == false
