@@ -173,6 +173,14 @@
         job: "/home/{{ user }}/code/sysops-scripts/podcast_convert.py"
 
 
+    - name: 'Firefly III cron job'
+      cron:
+        name: "Firefly III cron job"
+        minute: "0"
+        hour: "3"
+        job: "/usr/bin/docker exec $(/usr/bin/docker container ls -a -f name=fireflyiii --format={% raw %}'{{.ID}}'{% endraw %}) /usr/local/bin/php /var/www/html/artisan firefly-iii:cron"
+
+
   handlers:
     - name: Restart NFS service
       become: true
