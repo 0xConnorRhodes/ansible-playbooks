@@ -8,3 +8,4 @@ apt_packages:
   - mediainfo
   - unzip
   - curl
+  - zoxide
