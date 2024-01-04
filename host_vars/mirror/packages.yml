@@ -11,3 +11,5 @@ apt_packages:
   - zoxide
   - nfs-common
   - autofs
+  - clementine
+  - ffmpeg
