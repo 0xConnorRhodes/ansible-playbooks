@@ -122,3 +122,9 @@
         state: restarted
         enabled: yes
 
+    - name: 'symlink freetube'
+      file:
+        src: "/home/{{ user }}/.var/app/io.freetubeapp.FreeTube/config/FreeTube"
+        dest: "/home/{{ user }}/freetube"
+        state: link
+
