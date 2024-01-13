@@ -16,6 +16,7 @@ apt_packages:
   - aria2
   - mosh
   - flatpak
+  - jq
 
 flatpak_packages:
   - org.mozilla.firefox
