@@ -24,6 +24,18 @@
         name: "{{ apt_packages}}"
         state: present
 
+    - name: Add the flathub flatpak repository remote to the user installation
+      community.general.flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        method: user
+
+    - name: 'Install flatpak packages'
+      community.general.flatpak:
+        name: "{{ flatpak_packages }}"
+        state: present
+
     - name: 'Install chezmoi with snap'
       become: true
       snap:
