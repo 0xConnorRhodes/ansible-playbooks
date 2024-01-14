@@ -17,6 +17,7 @@ apt_packages:
   - mosh
   - flatpak
   - jq
+  - pipx
 
 flatpak_packages:
   - org.mozilla.firefox
