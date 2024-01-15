@@ -128,3 +128,46 @@
         dest: "/home/{{ user }}/freetube"
         state: link
 
+
+    # Install PowerShell
+    - name: Install PowerShellpre-requisite packages
+      become: true
+      apt:
+        name:
+          - wget
+          - apt-transport-https
+          - software-properties-common
+        state: present
+
+    - name: Get the version of Ubuntu
+      shell: source /etc/os-release && echo $VERSION_ID
+      args:
+        executable: /bin/bash
+      register: ubuntu_version
+
+    - name: Download the Microsoft repository keys
+      get_url:
+        url: https://packages.microsoft.com/config/ubuntu/{{ ubuntu_version.stdout }}/packages-microsoft-prod.deb
+        dest: /tmp/packages-microsoft-prod.deb
+
+    - name: Register the Microsoft repository keys
+      become: true
+      apt:
+        deb: /tmp/packages-microsoft-prod.deb
+        state: present
+
+    - name: Delete the Microsoft repository keys file
+      file:
+        path: /tmp/packages-microsoft-prod.deb
+        state: absent
+
+    - name: Update the list of packages after adding packages.microsoft.com
+      become: true
+      apt:
+        update_cache: yes
+
+    - name: Install PowerShell
+      become: true
+      apt:
+        name: powershell
+        state: present
