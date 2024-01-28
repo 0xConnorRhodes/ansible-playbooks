@@ -172,6 +172,24 @@
         hour: "*"
         job: "/home/{{ user }}/code/sysops-scripts/podcast_convert.py"
 
+    - name: 'create sanoid directory'
+      become: true
+      file:
+        path: /etc/sanoid
+        state: directory
+
+    - name: 'copy sanoid config'
+      become: true
+      copy:
+        src: configs/homeworld/sanoid.conf
+        dest: /etc/sanoid/sanoid.conf
+
+    - name: Enable sanoid.timer
+      become: true
+      systemd:
+        name: sanoid.timer
+        state: started
+        enabled: true
 
     - name: 'Firefly III cron transactions'
       cron:
