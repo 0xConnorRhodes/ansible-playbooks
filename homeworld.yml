@@ -173,13 +173,19 @@
         job: "/home/{{ user }}/code/sysops-scripts/podcast_convert.py"
 
 
-    - name: 'Firefly III cron job'
+    - name: 'Firefly III cron transactions'
       cron:
-        name: "Firefly III cron job"
+        name: "Firefly III cron transactions"
         minute: "0"
         hour: "3"
         job: "/usr/bin/docker exec $(/usr/bin/docker container ls -a -f name=fireflyiii --format={% raw %}'{{.ID}}'{% endraw %}) /usr/local/bin/php /var/www/html/artisan firefly-iii:cron"
 
+    - name: 'Firefly III cronjob to clear cache'
+      cron:
+        name: "Firefly III cronjob to clear cache"
+        minute: "0"
+        hour: "4"
+        job: "/usr/bin/docker exec $(/usr/bin/docker container ls -a -f name=fireflyiii --format={% raw %}'{{.ID}}'{% endraw %}) /usr/local/bin/php /var/www/html/artisan cache:clear"
 
   handlers:
     - name: Restart NFS service
