@@ -6,3 +6,6 @@ bootstrap:
 
 edit:
 	ansible-vault edit $(fzf)
+
+sanoid-test:
+	sudo sanoid --cron --debug --readonly
