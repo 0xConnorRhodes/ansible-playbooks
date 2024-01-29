@@ -130,7 +130,7 @@
 
 
     # Install PowerShell
-    - name: Install PowerShellpre-requisite packages
+    - name: 'Install PowerShell pre-requisite packages'
       become: true
       apt:
         name:
