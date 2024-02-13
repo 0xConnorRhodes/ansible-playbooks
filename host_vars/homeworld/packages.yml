@@ -17,5 +17,6 @@ install_packages:
   - python3-pip
   - pipx
   - mediainfo
+  - zip
   - unzip
   - sanoid
