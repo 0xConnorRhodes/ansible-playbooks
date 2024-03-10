@@ -1,6 +1,6 @@
 install_packages:
-  - python
-  - openssh
+  - python # install manually beforehand
+  - openssh # install manually beforehand
   - lua53
   - rsync
   - fish
