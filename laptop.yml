@@ -1,0 +1,20 @@
+---
+- name: Configure personal laptop
+  hosts: latitude
+  vars_files:
+    - host_vars/latitude/secrets.yml
+    - host_vars/latitude/packages.yml
+
+
+  tasks:
+    - name: "Install updates"
+      become: true
+      dnf:
+        name: "*"
+        state: latest
+
+    - name: "Install packages"
+      become: true
+      package:
+        name: "{{ install_packages }}"
+        state: present
