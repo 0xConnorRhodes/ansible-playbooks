@@ -1,0 +1,7 @@
+install_packages:
+  - python
+  - openssh
+  - lua53
+  - rsync
+  - fish
+  - fzf
