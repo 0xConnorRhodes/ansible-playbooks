@@ -1,0 +1,15 @@
+---
+- name: Configure homeworld server
+  hosts: phone
+  vars_files:
+    - host_vars/phone/secrets.yml
+    - host_vars/phone/packages.yml
+
+
+  tasks:
+    - name: "Install updates"
+      command: "pkg upgrade -y"
+
+    - name: "Install packages"
+      command: "pkg add -y  {{ item }}"
+      loop: "{{ install_packages }}"
