@@ -1,6 +1,6 @@
 ---
 - name: Configure homeworld server
-  hosts: phone
+  hosts: termux
   vars_files:
     - host_vars/phone/secrets.yml
     - host_vars/phone/packages.yml
