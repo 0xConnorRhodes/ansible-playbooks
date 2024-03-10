@@ -1,2 +1,3 @@
 install_packages:
   - openssh # install manually beforehand
+  - android-tools # provides adb
