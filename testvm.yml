@@ -17,9 +17,10 @@
 
     - name: 'Install apt packages'
       become: true
-      package:
-        - curl
-        - ffmpeg
+      apt:
+        package:
+          - curl
+          - ffmpeg
 
     - name: Add the flathub flatpak repository remote to the user installation
       community.general.flatpak_remote:
