@@ -1,0 +1,84 @@
+--- # Configure a temporary Linux VM with a GUI for testing
+- name: Configure test linux vm
+  hosts: testvm
+
+
+  tasks:
+    - name: 'Update apt cache'
+      become: true
+      apt:
+        update_cache: yes
+
+    - name: 'Upgrade packages'
+      become: true
+      apt:
+        upgrade: safe
+        autoremove: yes
+
+    - name: 'Install apt packages'
+      become: true
+      package:
+        - curl
+        - ffmpeg
+
+    - name: Add the flathub flatpak repository remote to the user installation
+      community.general.flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        method: user
+
+    - name: 'Install flatpak packages'
+      community.general.flatpak:
+        name:
+          - com.github.tchx84.Flatseal
+
+    - name: Install magic wormhole
+      become: true
+      get_url:
+        url: https://github.com/magic-wormhole/magic-wormhole.rs/releases/download/0.6.0/wormhole-rs
+        dest: /usr/local/bin/wormhole-rs
+        mode: "a+x"
+
+    # Install PowerShell
+    - name: 'Install PowerShell pre-requisite packages'
+      become: true
+      apt:
+        name:
+          - wget
+          - apt-transport-https
+          - software-properties-common
+        state: present
+
+    - name: Get the version of Ubuntu
+      shell: source /etc/os-release && echo $VERSION_ID
+      args:
+        executable: /bin/bash
+      register: ubuntu_version
+
+    - name: Download the Microsoft repository keys
+      get_url:
+        url: https://packages.microsoft.com/config/ubuntu/{{ ubuntu_version.stdout }}/packages-microsoft-prod.deb
+        dest: /tmp/packages-microsoft-prod.deb
+
+    - name: Register the Microsoft repository keys
+      become: true
+      apt:
+        deb: /tmp/packages-microsoft-prod.deb
+        state: present
+
+    - name: Delete the Microsoft repository keys file
+      file:
+        path: /tmp/packages-microsoft-prod.deb
+        state: absent
+
+    - name: Update the list of packages after adding packages.microsoft.com
+      become: true
+      apt:
+        update_cache: yes
+
+    - name: Install PowerShell
+      become: true
+      apt:
+        name: powershell
+        state: present
