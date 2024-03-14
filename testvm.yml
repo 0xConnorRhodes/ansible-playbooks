@@ -20,7 +20,7 @@
       apt:
         package:
           - curl
-          - ffmpeg
+          - flatpak
 
     - name: Add the flathub flatpak repository remote to the user installation
       community.general.flatpak_remote:
@@ -33,6 +33,7 @@
       community.general.flatpak:
         name:
           - com.github.tchx84.Flatseal
+        method: user
 
     - name: Install magic wormhole
       become: true
