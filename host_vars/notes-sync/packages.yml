@@ -3,6 +3,7 @@ apt_packages:
   - nfs-common
   - autofs
   - curl
+  - neovim
 
 flatpak_packages:
   - md.obsidian.Obsidian
