@@ -1,0 +1,8 @@
+apt_packages:
+  - flatpak
+  - nfs-common
+  - autofs
+  - curl
+
+flatpak_packages:
+  - md.obsidian.Obsidian

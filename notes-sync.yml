@@ -1,0 +1,71 @@
+---
+- name: Configure Notes Sync VM
+  hosts: notes-sync
+  vars_files:
+    - host_vars/notes-sync/packages.yml
+    - host_vars/notes-sync/secrets.yml
+
+
+  tasks:
+    - name: 'Update apt cache'
+      become: true
+      apt:
+        update_cache: yes
+
+    - name: 'Upgrade packages'
+      become: true
+      apt:
+        upgrade: safe
+        autoremove: yes
+
+    - name: 'Install apt packages'
+      become: true
+      package:
+        name: "{{ apt_packages}}"
+        state: present
+
+    - name: Add the flathub flatpak repository remote to the user installation
+      community.general.flatpak_remote:
+        name: flathub
+        state: present
+        flatpakrepo_url: https://dl.flathub.org/repo/flathub.flatpakrepo
+        method: user
+
+    - name: 'Install flatpak packages'
+      community.general.flatpak:
+        name: "{{ flatpak_packages }}"
+        state: present
+        method: user
+
+    - name: Install magic wormhole
+      become: true
+      get_url:
+        url: https://github.com/magic-wormhole/magic-wormhole.rs/releases/download/0.6.0/wormhole-rs
+        dest: /usr/local/bin/wormhole-rs
+        mode: "a+x"
+
+    - name: 'auto.master nfs config'
+      become: true
+      lineinfile:
+        path: /etc/auto.master
+        line: "/mnt/nfs /etc/auto.nfs --ghost --timeout=60"
+        insertafter: EOF
+
+    - name: 'Create /mnt/nfs directory'
+      become: true
+      file:
+        path: /mnt/nfs
+        state: directory
+
+    - name: 'Copy auto.nfs file'
+      become: true
+      copy:
+        src: configs/notes-sync/auto.nfs
+        dest: /etc/auto.nfs
+
+    - name: 'Enable/restart autofs.service'
+      become: true
+      systemd:
+        name: autofs.service
+        state: restarted
+        enabled: yes
