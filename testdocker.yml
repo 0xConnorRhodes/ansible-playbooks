@@ -1,0 +1,67 @@
+--- # Configure a temporary LXC Container with Docker
+- name: Configure test Docker host
+  hosts: testdocker
+
+
+  tasks:
+    - name: 'Update apt cache'
+      become: true
+      apt:
+        update_cache: yes
+
+    - name: 'Upgrade packages'
+      become: true
+      apt:
+        upgrade: safe
+        autoremove: yes
+
+    - name: 'Install apt packages'
+      become: true
+      apt:
+        package:
+          - curl
+          - screen
+
+    - name: Install magic wormhole
+      become: true
+      get_url:
+        url: https://github.com/magic-wormhole/magic-wormhole.rs/releases/download/0.6.0/wormhole-rs
+        dest: /usr/local/bin/wormhole-rs
+        mode: "a+x"
+
+    - name: Download just install script
+      get_url:
+        url: https://just.systems/install.sh
+        dest: /tmp/install.sh
+      when: just_exists.stat.exists == false
+
+    - name: Make the script executable
+      file:
+        path: /tmp/install.sh
+        mode: +x
+      when: just_exists.stat.exists == false
+
+    - name: Run just install script
+      become: true
+      command: /tmp/install.sh --to /usr/local/bin
+      when: just_exists.stat.exists == false
+
+    - name: Download lazydocker install script
+      get_url:
+        url: https://raw.githubusercontent.com/jesseduffield/lazydocker/master/scripts/install_update_linux.sh
+        dest: /tmp/install_lazydocker.sh
+
+    - name: Make the script executable
+      file:
+        path: /tmp/install_lazydocker.sh
+        mode: +x
+
+    - name: Run lazydocker install script
+      command: /tmp/install_lazydocker.sh
+
+  roles:
+    - role: geerlingguy.docker
+      vars:
+        docker_install_compose_plugin: true
+        docker_compose_package: docker-compose-plugin
+        docker_compose_package_state: present
