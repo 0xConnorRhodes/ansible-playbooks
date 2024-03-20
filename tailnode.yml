@@ -25,4 +25,10 @@
           - openssh-server
           - screen
           - fish
+          - neovim
 
+  roles:
+    - role: create_user
+      # user info specified in secrets.yml
+    - role: artis3n.tailscale
+      # tailscale auth key in secrets.yml
