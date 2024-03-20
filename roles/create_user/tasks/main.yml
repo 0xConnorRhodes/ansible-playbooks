@@ -1,0 +1,10 @@
+---
+# tasks file for roles/create_user
+- name: Create user
+  user:
+    name: "{{ user }}"
+    password: "{{ password }}"
+    state: present
+    createhome: true
+    shell: /bin/bash
+    groups: sudo
