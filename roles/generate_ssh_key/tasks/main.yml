@@ -1,0 +1,24 @@
+- name: Check if SSH key exists
+  stat:
+    path: "~/.ssh/id_ed25519"
+  register: ssh_key_exists
+
+- name: Generate SSH key if it doesn't exist
+  command:
+    cmd: ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519 -N ""
+  when: ssh_key_exists.stat.exists == false
+
+- name: Read public key
+  shell: cat ~/.ssh/id_ed25519.pub
+  register: file_content
+  when: ssh_key_exists.stat.exists == false
+
+- name: Print public key to terminal
+  debug:
+    msg: "{{ file_content.stdout }}"
+  when: ssh_key_exists.stat.exists == false
+
+- name: 'Pause: display public key'
+  pause:
+    prompt: "Press Enter to continue..."
+  when: ssh_key_exists.stat.exists == false
