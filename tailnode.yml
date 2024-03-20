@@ -4,6 +4,7 @@
   vars_files:
     - host_vars/homeworld/secrets.yml
 
+# TODO: set locale to UTF-8 for mosh
 
   tasks:
     - name: 'Update apt cache'
@@ -26,9 +27,13 @@
           - screen
           - fish
           - neovim
+          - mosh
 
   roles:
     - role: create_user
       # user info specified in secrets.yml
+    - role: generate_ssh_key
+      become: true
+      become_user: "{{ user }}"
     - role: artis3n.tailscale
       # tailscale auth key in secrets.yml
