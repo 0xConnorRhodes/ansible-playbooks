@@ -1,6 +1,7 @@
 install_packages:
-  - openssh # install manually beforehand
-  - android-tools # provides adb
+  - openssh-server
+  - android-tools-adb
+  - flatpak
 
 flatpak_packages:
   - md.obsidian.Obsidian

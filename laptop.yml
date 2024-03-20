@@ -7,11 +7,16 @@
 
 
   tasks:
-    - name: "Install updates"
+    - name: "Update apt cache"
       become: true
-      dnf:
-        name: "*"
-        state: latest
+      apt:
+        update_cache: true
+
+    - name: "Upgrade packages"
+      become: true
+      apt:
+        upgrade: safe
+        autoremove: yes
 
     - name: "Install packages"
       become: true
