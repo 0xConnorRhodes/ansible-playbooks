@@ -1,0 +1,40 @@
+--- # Configure Raspberry Pi running Ubuntu Arm as network test node
+- name: Configure Pi Network Test Node
+  hosts: pi-net-test
+  vars_files:
+    - host_vars/pi-net-test/secrets.yml
+
+# TODO: set locale to UTF-8 for mosh
+
+
+  tasks:
+    - name: Set a hostname
+      become: true
+      ansible.builtin.hostname:
+        name: pi-net-test
+
+    - name: 'Update apt cache'
+      become: true
+      apt:
+        update_cache: true
+
+    - name: 'Upgrade packages'
+      become: true
+      apt:
+        upgrade: safe
+        autoremove: yes
+
+    - name: 'Install apt packages'
+      become: true
+      apt:
+        package:
+          - curl
+          - openssh-server
+          - screen
+          - fish
+          - neovim
+          - mosh
+
+  roles:
+    - role: artis3n.tailscale
+      # tailscale auth key in secrets.yml
