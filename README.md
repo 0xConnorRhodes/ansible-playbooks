@@ -8,6 +8,7 @@ These are the ansible playbooks I use to set up my various machines.
 - **tailnode** - Dedicated [Tailscale](https://tailscale.com/) jumphost to access my Tailnet from devices that cannot run the Tailscale client
 - **latitude** - My personal laptop
 - **notes-sync** - Dedicated VM to provide an always-on host to synchronize and monitor my notes sync setup
+- **pi-network-test** - Ubuntu ARM playbook for Raspberry Pi with tools for network testing
 
 ## Setup
 - Install required modules from ansible galaxy with `just requirements`
