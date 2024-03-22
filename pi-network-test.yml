@@ -35,7 +35,9 @@
           - neovim
           - mosh
           - tcpdump
+          - htop
+          - iotop
 
-  roles:
+  role:
     - role: artis3n.tailscale
       # tailscale auth key in secrets.yml
