@@ -212,6 +212,13 @@
         hour: "23"
         job: "/home/connor/code/sysops-scripts/note-automation/create_daily_note.py"
 
+    - name: 'prune dangling links in daily notes'
+      cron:
+        name: "prune dangling links in daily notes"
+        minute: "0"
+        hour: "2"
+        job: "/home/connor/code/sysops-scripts/note-automation/prune_empty_dn_links.py"
+
 
   handlers:
     - name: Restart NFS service
