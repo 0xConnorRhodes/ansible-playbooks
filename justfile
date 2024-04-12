@@ -9,3 +9,6 @@ edit:
 
 sanoid-test:
 	sudo sanoid --cron --debug --readonly
+
+homeworld-cron:
+	ansible-playbook homeworld.yml --start-at-task 'Firefly III cron transactions'
