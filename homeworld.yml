@@ -205,6 +205,13 @@
         hour: "4"
         job: "/usr/bin/docker exec $(/usr/bin/docker container ls -a -f name=fireflyiii --format={% raw %}'{{.ID}}'{% endraw %}) /usr/local/bin/php /var/www/html/artisan cache:clear"
 
+    - name: 'cron create_daily_note.py'
+      cron:
+        name: "create daily note in zettelkastedn"
+        minute: "0"
+        hour: "23"
+        job: "/home/connor/code/sysops-scripts/note-automation/create_daily_note.py"
+
 
   handlers:
     - name: Restart NFS service
