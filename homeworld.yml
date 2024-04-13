@@ -209,7 +209,7 @@
       cron:
         name: "create daily note in zettelkastedn"
         minute: "0"
-        hour: "23"
+        hour: "1"
         job: "/home/connor/code/sysops-scripts/note-automation/create_daily_note.py"
 
     - name: 'prune dangling links in daily notes'
