@@ -1,0 +1,6 @@
+- name: Install magic wormhole
+  become: true
+  get_url:
+    url: https://github.com/magic-wormhole/magic-wormhole.rs/releases/download/0.6.0/wormhole-rs
+    dest: /usr/local/bin/wormhole-rs
+    mode: "a+x"
