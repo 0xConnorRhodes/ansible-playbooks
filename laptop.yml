@@ -61,3 +61,6 @@
       pause:
         prompt: "Press Enter to continue..."
       when: ssh_key_exists.stat.exists == false
+
+  roles:
+    - role: install_wormhole-rs
