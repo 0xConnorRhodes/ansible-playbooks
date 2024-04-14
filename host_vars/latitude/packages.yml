@@ -10,6 +10,7 @@ install_packages:
   - bat
   - zoxide
   - zfsutils-linux
+  - tree
 
 flatpak_packages:
   - md.obsidian.Obsidian
