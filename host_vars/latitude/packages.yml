@@ -9,6 +9,7 @@ install_packages:
   - fzf
   - bat
   - zoxide
+  - zfsutils-linux
 
 flatpak_packages:
   - md.obsidian.Obsidian
