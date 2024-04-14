@@ -11,6 +11,7 @@ install_packages:
   - zoxide
   - zfsutils-linux
   - tree
+  - mosh
 
 flatpak_packages:
   - md.obsidian.Obsidian
