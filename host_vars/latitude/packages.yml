@@ -8,6 +8,7 @@ install_packages:
   - screen
   - fzf
   - bat
+  - zoxide
 
 flatpak_packages:
   - md.obsidian.Obsidian
