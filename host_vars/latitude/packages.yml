@@ -2,6 +2,12 @@ install_packages:
   - openssh-server
   - android-tools-adb
   - flatpak
+  - pipx
+  - fish
+  - neovim
+  - screen
+  - fzf
+  - bat
 
 flatpak_packages:
   - md.obsidian.Obsidian
