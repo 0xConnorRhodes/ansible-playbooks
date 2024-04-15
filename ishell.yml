@@ -1,0 +1,43 @@
+---
+- name: Configure interactive shell lxc
+  hosts: ishell
+  vars_files:
+    - host_vars/ishell/packages.yml
+    - host_vars/ishell/secrets.yml
+
+  pre_tasks:
+    - name: 'Update apt cache'
+      become: true
+      apt:
+        update_cache: yes
+
+    - name: 'Upgrade packages'
+      become: true
+      apt:
+        upgrade: safe
+        autoremove: yes
+
+    - name: 'Install apt packages'
+      become: true
+      package:
+        name: "{{ install_packages }}"
+        state: present
+
+  roles:
+    - role: create_user
+      # user info specified in secrets.yml
+    - role: install_wormhole-rs
+    - role: install_powershell_ubuntu
+      # run chezmoi twice. first to install (as root) and then to init as user
+    - role: hussainweb.chezmoi
+      become: true
+     #become_user: "{{ user }}"
+    - role: hussainweb.chezmoi
+      chezmoi_init_url: "0xConnorRhodes"
+      become: true
+      become_user: "{{ user }}"
+    - role: generate_ssh_key
+      become: true
+      become_user: "{{ user }}"
+
+ #post_tasks:

@@ -1,0 +1,19 @@
+install_packages: 
+  - screen
+  - aria2
+  - tree
+  - neovim
+  - zoxide
+  - fzf
+  - lf
+  - make
+  - fish
+  - fd-find
+  - ripgrep
+  - bat
+  - ffmpeg
+  - python3-pip
+  - pipx
+  - mediainfo
+  - zip
+  - unzip
