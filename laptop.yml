@@ -41,3 +41,4 @@
     - role: generate_ssh_key
     - role: install_wormhole-rs
     - { role: hussainweb.chezmoi, chezmoi_init_url: "0xConnorRhodes" }
+    - role: install_powershell_ubuntu

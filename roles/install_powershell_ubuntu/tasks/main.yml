@@ -1,0 +1,15 @@
+- name: Download PowerShell .deb package
+  get_url:
+    url: https://github.com/PowerShell/PowerShell/releases/download/v7.4.2/powershell_7.4.2-1.deb_amd64.deb
+    dest: /tmp/powershell.deb
+
+- name: Install PowerShell using dpkg
+  become: true
+  apt:
+    deb: /tmp/powershell.deb
+    state: present
+
+- name: Delete the powershell .deb file
+  file:
+    path: /tmp/powershell.deb
+    state: absent
