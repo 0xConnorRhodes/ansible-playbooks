@@ -31,7 +31,6 @@
       # run chezmoi twice. first to install (as root) and then to init as user
     - role: hussainweb.chezmoi
       become: true
-     #become_user: "{{ user }}"
     - role: hussainweb.chezmoi
       chezmoi_init_url: "0xConnorRhodes"
       become: true
