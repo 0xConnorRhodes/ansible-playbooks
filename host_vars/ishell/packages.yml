@@ -17,3 +17,4 @@ install_packages:
   - mediainfo
   - zip
   - unzip
+  - ffmpeg

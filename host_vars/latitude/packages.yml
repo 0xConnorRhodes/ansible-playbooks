@@ -12,6 +12,7 @@ install_packages:
   - zfsutils-linux
   - tree
   - mosh
+  - ffmpeg
 
 flatpak_packages:
   - md.obsidian.Obsidian
