@@ -13,6 +13,7 @@ install_packages:
   - tree
   - mosh
   - ffmpeg
+  - lf
 
 flatpak_packages:
   - md.obsidian.Obsidian
