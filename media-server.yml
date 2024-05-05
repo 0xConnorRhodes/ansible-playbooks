@@ -56,3 +56,4 @@
         docker_compoes_package_state: present
         docker_users:
           - "{{ user }}"
+    - role: install_powershell_arm64linux
