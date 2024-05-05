@@ -29,6 +29,7 @@
           - iotop
           - ffmpeg 
           - nfs-kernel-server
+          - bat
 
     - name: 'Add media drive to fstab'
       become: true
@@ -48,6 +49,13 @@
         src: configs/media-server/auto-editor-docker/
         dest: ~/code/auto-editor-docker/
 
+    - name: 'copy nfs exports config'
+      become: true
+      copy:
+        src: configs/media-server/nfs-exports
+        dest: /etc/exports
+      notify:
+        - Restart NFS service
 
 # MANUAL: set up jellyfin with curl https://repo.jellyfin.org/install-debuntu.sh | sudo bash
 
@@ -62,3 +70,10 @@
         docker_users:
           - "{{ user }}"
     - role: install_powershell_arm64linux
+    
+  handlers:
+    - name: Restart NFS service
+      become: true
+      service:
+        name: nfs-kernel-server
+        state: restarted
