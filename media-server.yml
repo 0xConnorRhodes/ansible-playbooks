@@ -1,0 +1,58 @@
+---
+- name: Configure Media Server
+  hosts: media-server
+  vars_files:
+    - host_vars/media-server/secrets.yml
+
+  tasks:
+    - name: 'Update apt cache'
+      become: true
+      apt:
+        update_cache: true
+
+    - name: 'Upgrade packages'
+      become: true
+      apt:
+        upgrade: safe
+        autoremove: yes
+
+    - name: 'Install apt packages'
+      become: true
+      apt:
+        package:
+          - curl
+          - openssh-server
+          - screen
+          - fish
+          - neovim
+          - htop
+          - iotop
+          - ffmpeg 
+          - pipx
+
+            # - name: 'Install python packages'
+            #   community.general.pipx:
+            #     name: auto-editor
+            #     state: present
+
+    - name: Ensure a specific line is in /etc/fstab
+      become: true
+      blockinfile:
+        path: /etc/fstab
+        block: |
+          UUID=de1c2ba1-fb26-465f-8bd4-605474532e62 /media ext4 defaults,nofail 0 0
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+
+
+    # set up jellyfin with curl https://repo.jellyfin.org/install-debuntu.sh | sudo bash
+
+  roles:
+    - role: generate_ssh_key
+    - role: geerlingguy.docker
+      become: true
+      vars:
+        docker_install_compose_plugin: true
+        docker_compose_package: docker-compose-plugin
+        docker_compoes_package_state: present
+        docker_users:
+          - "{{ user }}"
