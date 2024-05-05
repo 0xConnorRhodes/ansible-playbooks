@@ -1,0 +1,12 @@
+services:
+  auto-editor:
+    build:
+      context: .
+      dockerfile: Containerfile
+    image: auto-editor
+    container_name: auto-editor
+    hostname: "auto-editor"
+    command: sh -c "tail -f /dev/null"
+    restart: always
+    volumes:
+      - /media:/media
