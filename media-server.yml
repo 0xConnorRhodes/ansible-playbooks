@@ -28,14 +28,9 @@
           - htop
           - iotop
           - ffmpeg 
-          - pipx
+          - nfs-kernel-server
 
-            # - name: 'Install python packages'
-            #   community.general.pipx:
-            #     name: auto-editor
-            #     state: present
-
-    - name: Ensure a specific line is in /etc/fstab
+    - name: 'Add media drive to fstab'
       become: true
       blockinfile:
         path: /etc/fstab
@@ -43,8 +38,18 @@
           UUID=de1c2ba1-fb26-465f-8bd4-605474532e62 /media ext4 defaults,nofail 0 0
         marker: "# {mark} ANSIBLE MANAGED BLOCK"
 
+    - name: 'Create local code directory'
+      file:
+        path: ~/code
+        state: directory
 
-    # set up jellyfin with curl https://repo.jellyfin.org/install-debuntu.sh | sudo bash
+    - name: 'Copy auto-editor docker files to server'
+      copy:
+        src: configs/media-server/auto-editor-docker/
+        dest: ~/code/auto-editor-docker/
+
+
+# MANUAL: set up jellyfin with curl https://repo.jellyfin.org/install-debuntu.sh | sudo bash
 
   roles:
     - role: generate_ssh_key
