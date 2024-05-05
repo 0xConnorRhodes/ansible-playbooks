@@ -30,6 +30,7 @@
           - ffmpeg 
           - nfs-kernel-server
           - bat
+          - tree
 
     - name: 'Add media drive to fstab'
       become: true

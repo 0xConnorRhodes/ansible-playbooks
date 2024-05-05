@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Containerfile
     image: auto-editor
+    user: "1000:1000"
     container_name: auto-editor
     hostname: "auto-editor"
     command: sh -c "tail -f /dev/null"
