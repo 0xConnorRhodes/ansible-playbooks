@@ -1,0 +1,45 @@
+- name: Check if PowerShell is already installed
+  become: true
+  stat:
+    path: /opt/microsoft/powershell/7/pwsh
+  register: pwsh
+
+- name: Download PowerShell tar.gz file
+  become: true
+  vars:
+    powershell_version: "7.3.12"
+  get_url:
+    url: "https://github.com/PowerShell/PowerShell/releases/download/v{{ powershell_version }}/powershell-{{ powershell_version }}-linux-arm64.tar.gz"
+    dest: /tmp/powershell.tar.gz
+  when: not pwsh.stat.exists
+
+- name: Create the directory for PowerShell
+  become: true
+  file:
+    path: /opt/microsoft/powershell/7
+    state: directory
+  when: not pwsh.stat.exists
+
+- name: Extract PowerShell tar.gz file
+  become: true
+  unarchive:
+    src: /tmp/powershell.tar.gz
+    dest: /opt/microsoft/powershell/7
+    remote_src: yes
+  when: not pwsh.stat.exists
+
+- name: Set executable permissions for PowerShell
+  become: true
+  file:
+    path: /opt/microsoft/powershell/7/pwsh
+    mode: '0755'
+  when: not pwsh.stat.exists
+
+- name: Create symlink for PowerShell
+  become: true
+  file:
+    src: /opt/microsoft/powershell/7/pwsh
+    dest: /usr/bin/pwsh
+    state: link
+  when: not pwsh.stat.exists
+
