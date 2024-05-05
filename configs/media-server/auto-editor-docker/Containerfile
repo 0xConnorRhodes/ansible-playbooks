@@ -1,0 +1,17 @@
+FROM python:latest
+WORKDIR /usr/src/app
+
+# install dependencies
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    libavformat-dev \
+    libavcodec-dev \
+    libavdevice-dev \
+    libavutil-dev \
+    libswscale-dev \
+    libswresample-dev \
+    libavfilter-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# install auto-editor
+RUN pip install --no-cache-dir auto-editor
