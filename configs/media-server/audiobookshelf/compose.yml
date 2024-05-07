@@ -1,0 +1,21 @@
+--- # compose file for audiobookshelf on media-server
+services:
+  audiobookshelf:
+    image: advplyr/audiobookshelf
+    user: "1000:1000"
+    container_name: audiobookshelf
+    hostname: audiobookshelf
+    restart: unless-stopped
+    ports:
+      - 1589:80
+    volumes:
+      - audiobookshelf_config:/config
+      - audiobookshelf_metadata:/metadata
+      - /media/audiobooks/audiobookshelf:/audiobooks
+      - /media/podcasts/ashelf_casts:/podcasts
+
+volumes:
+  audiobookshelf_config:
+    name: audiobookshelf_config
+  audiobookshelf_metadata:
+    name: audiobookshelf_config

@@ -50,6 +50,11 @@
         src: configs/media-server/auto-editor-docker/
         dest: ~/code/auto-editor-docker/
 
+    - name: 'Copy audiobookshelf compose file to server'
+      copy:
+        src: configs/media-server/audiobookshelf/
+        dest: ~/code/audiobookshelf/
+
     - name: 'copy nfs exports config'
       become: true
       copy:
