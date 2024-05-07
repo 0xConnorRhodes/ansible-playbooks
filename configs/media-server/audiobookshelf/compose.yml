@@ -18,4 +18,4 @@ volumes:
   audiobookshelf_config:
     name: audiobookshelf_config
   audiobookshelf_metadata:
-    name: audiobookshelf_config
+    name: audiobookshelf_metadata
