@@ -31,6 +31,7 @@
           - nfs-kernel-server
           - bat
           - tree
+          - unzip
 
     - name: 'Add media drive to fstab'
       become: true
