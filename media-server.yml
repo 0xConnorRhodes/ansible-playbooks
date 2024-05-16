@@ -33,6 +33,7 @@
           - unzip
           - nfs-common
           - autofs
+          - mediainfo
 
     - name: 'Add media drive to fstab'
       become: true
