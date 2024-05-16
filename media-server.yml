@@ -15,7 +15,6 @@
       apt:
         upgrade: safe
         autoremove: yes
-
     - name: 'Install apt packages'
       become: true
       apt:
@@ -32,6 +31,8 @@
           - bat
           - tree
           - unzip
+          - nfs-common
+          - autofs
 
     - name: 'Add media drive to fstab'
       become: true
@@ -77,6 +78,10 @@
         docker_users:
           - "{{ user }}"
     - role: install_powershell_arm64linux
+    - role: configure_nfs_client
+      become: true
+      vars:
+        autofs_mounts_file: configs/media-server/auto.nfs
     
   handlers:
     - name: Restart NFS service

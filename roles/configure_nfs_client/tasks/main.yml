@@ -1,0 +1,35 @@
+- name: Install nfs-common and autofs
+  apt:
+    name:
+      - nfs-common
+      - autofs
+    state: present
+    update_cache: yes
+
+- name: Create /mnt/nfs directory if it doesn't exist
+  file:
+    path: /mnt/nfs
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Add line to /etc/auto.master if it does not exist
+  lineinfile:
+    path: /etc/auto.master
+    line: '/mnt/nfs /etc/auto.nfs --ghost --timeout=60'
+    state: present
+    insertafter: EOF
+
+- name: Copy auto.nfs file to /etc/auto.nfs
+  copy:
+    src: "{{ autofs_mounts_file }}"
+    dest: /etc/auto.nfs
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Restart autofs service
+  service:
+    name: autofs
+    state: restarted
