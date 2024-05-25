@@ -1,20 +1,7 @@
 install_packages:
-  - openssh-server
-  - android-tools-adb
   - flatpak
-  - pipx
-  - fish
-  - neovim
-  - screen
-  - fzf
-  - bat
-  - zoxide
+  - magic-wormhole
   - zfsutils-linux
-  - tree
-  - mosh
-  - ffmpeg
-  - lf
-  - htop
 
 flatpak_packages:
   - md.obsidian.Obsidian
