@@ -1,7 +1,9 @@
 install_packages:
   - flatpak
   - zfsutils-linux
+  - make
 
 flatpak_packages:
   - md.obsidian.Obsidian
   - com.github.tchx84.Flatseal
+  - com.brave.Browser

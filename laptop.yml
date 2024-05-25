@@ -3,8 +3,8 @@
 - name: Configure personal laptop
   hosts: latitude
   vars_files:
-    - host_vars/latitude/secrets.yml
-    - host_vars/latitude/packages.yml
+    - host_vars/laptop/secrets.yml
+    - host_vars/laptop/packages.yml
 
 
   tasks:
@@ -37,6 +37,20 @@
         name: "{{ flatpak_packages }}"
         state: present
         method: user
+
+    - name: Create a directory named 'code' in the user's home directory
+      file:
+        path: "{{ lookup('env', 'HOME') }}/code"
+        state: directory
+        mode: '0755'
+
+    - name: Clone the repository into the specified subfolder
+      git:
+        repo: 'git@github.com:0xConnorRhodes/devct-laptop.git'
+        dest: "{{ lookup('env', 'HOME') }}/code/devct-laptop"
+        version: 'HEAD'
+        accept_hostkey: yes
+
 
   roles:
     - role: generate_ssh_key
