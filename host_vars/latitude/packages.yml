@@ -1,6 +1,5 @@
 install_packages:
   - flatpak
-  - magic-wormhole
   - zfsutils-linux
 
 flatpak_packages:
