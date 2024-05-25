@@ -59,6 +59,9 @@
         gnome_extensions:
           - id: 517 # caffeine
             enable: true
+        gnome_dconf:
+          - key: /org/gnome/desktop/background/show-desktop-icons 
+            value: "false"
     - role: geerlingguy.docker
       become: true
       vars:
