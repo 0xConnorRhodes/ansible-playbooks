@@ -2,6 +2,8 @@ install_packages:
   - flatpak
   - zfsutils-linux
   - make
+  - curl
+  - lbzip2
 
 flatpak_packages:
   - md.obsidian.Obsidian
