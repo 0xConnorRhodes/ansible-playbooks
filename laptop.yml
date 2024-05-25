@@ -1,4 +1,5 @@
----
+--- # playbook for configuring dell latitude 5400 with Ubuntu
+# first run: wget sfs.connorrhodes.com/bootstrap/ubuntu.sh && bash ubuntu.sh, then configure ssh access
 - name: Configure personal laptop
   hosts: latitude
   vars_files:
@@ -39,6 +40,8 @@
 
   roles:
     - role: generate_ssh_key
-    - role: install_wormhole-rs
-    - { role: hussainweb.chezmoi, chezmoi_init_url: "0xConnorRhodes" }
-    - role: install_powershell_ubuntu
+    - role: PeterMosmans.customize-gnome
+      vars:
+        gnome_extensions:
+          - id: 517 # caffeine
+            enable: true
