@@ -4,6 +4,7 @@ install_packages:
   - make
   - curl
   - lbzip2
+  - mpv
 
 flatpak_packages:
   - md.obsidian.Obsidian
