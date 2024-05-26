@@ -82,6 +82,7 @@
         dest: /usr/local/bin/fd
         state: link
 
+
   roles:
     - role: generate_ssh_key
     - role: PeterMosmans.customize-gnome
