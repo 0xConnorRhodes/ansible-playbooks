@@ -6,6 +6,8 @@ install_packages:
   - lbzip2
   - mpv
   - bat
+  - fzf
+  - fd-find
 
 flatpak_packages:
   - md.obsidian.Obsidian
