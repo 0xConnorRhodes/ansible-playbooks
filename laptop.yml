@@ -92,6 +92,8 @@
         gnome_dconf:
           - key: /org/gnome/shell/disabled-extensions
             value: ['ubuntu-dock@ubuntu.com']
+          - key: /org/gnome/desktop/input-sources/xkb-options
+            value: ['ctrl:nocaps']
     - role: hussainweb.chezmoi
       chezmoi_init_url: "0xConnorRhodes"
     - role: geerlingguy.docker
