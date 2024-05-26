@@ -90,8 +90,6 @@
           - id: 517 # caffeine
             enable: true
         gnome_dconf:
-          - key: /org/gnome/desktop/background/show-desktop-icons 
-            value: "false"
           - key: /org/gnome/shell/disabled-extensions
             value: ['ubuntu-dock@ubuntu.com']
     - role: hussainweb.chezmoi
