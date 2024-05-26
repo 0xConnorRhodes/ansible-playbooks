@@ -44,12 +44,18 @@
         state: directory
         mode: '0755'
 
+    - name: Check if the directory already exists
+      stat:
+        path: "{{ lookup('env', 'HOME') }}/code/devct-laptop"
+      register: devct_cloned
+
     - name: Clone the repository into the specified subfolder
       git:
         repo: 'git@github.com:0xConnorRhodes/devct-laptop.git'
         dest: "{{ lookup('env', 'HOME') }}/code/devct-laptop"
         version: 'HEAD'
         accept_hostkey: yes
+      when: not devct_cloned.stat.exists
 
 
   roles:
@@ -64,6 +70,7 @@
             value: "false"
           - key: /org/gnome/shell/disabled-extensions
             value: ['ubuntu-dock@ubuntu.com']
+    - role: hussainweb.chezmoi
     - role: geerlingguy.docker
       become: true
       vars:
