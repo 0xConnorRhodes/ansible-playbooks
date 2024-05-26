@@ -10,6 +10,7 @@ install_packages:
   - fd-find
   - neovim
   - zoxide
+  - screen
 
 flatpak_packages:
   - md.obsidian.Obsidian
