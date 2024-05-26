@@ -9,6 +9,7 @@ install_packages:
   - fzf
   - fd-find
   - neovim
+  - zoxide
 
 flatpak_packages:
   - md.obsidian.Obsidian
