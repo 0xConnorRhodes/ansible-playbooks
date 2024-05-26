@@ -38,7 +38,7 @@
         state: present
         method: user
 
-    - name: Create a directory named 'code' in the user's home directory
+    - name: 'Create code directory'
       file:
         path: "{{ lookup('env', 'HOME') }}/code"
         state: directory
@@ -57,6 +57,24 @@
         accept_hostkey: yes
       when: not devct_cloned.stat.exists
 
+    - name: Create secret directory
+      file:
+        path: "{{ lookup('env', 'HOME') }}/.local/.secret"
+        state: directory
+        mode: '0755'
+
+    - name: copy dotfiles encryption key
+      copy:
+        src: configs/laptop/age-chezmoi-key.txt
+        dest: "{{ lookup('env', 'HOME') }}/.local/.secret/age-chezmoi-key.txt"
+
+    - name: Symlink for bat
+      become: true
+      ansible.builtin.file:
+        src: /usr/bin/batcat
+        dest: /usr/local/bin/bat
+        state: link
+
 
   roles:
     - role: generate_ssh_key
@@ -71,6 +89,7 @@
           - key: /org/gnome/shell/disabled-extensions
             value: ['ubuntu-dock@ubuntu.com']
     - role: hussainweb.chezmoi
+      chezmoi_init_url: "0xConnorRhodes"
     - role: geerlingguy.docker
       become: true
       vars:

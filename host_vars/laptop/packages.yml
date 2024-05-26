@@ -5,6 +5,7 @@ install_packages:
   - curl
   - lbzip2
   - mpv
+  - bat
 
 flatpak_packages:
   - md.obsidian.Obsidian
