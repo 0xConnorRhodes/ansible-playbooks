@@ -11,6 +11,7 @@ install_packages:
   - neovim
   - zoxide
   - screen
+  - mediainfo
 
 flatpak_packages:
   - md.obsidian.Obsidian
