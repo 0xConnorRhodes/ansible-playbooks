@@ -6,10 +6,39 @@
     - host_vars/phone/packages.yml
 
 
-  tasks:
+  pre_tasks:
+    - name: "check if storage has been setup"
+      stat:
+        path: ~/storage
+      register: storage_directory
+
+    - name: "termux-setup-storage: confirm on phone"
+      shell: termux-setup-storage
+      when: not storage_directory.stat.exists
+
     - name: "Install updates"
       command: "pkg upgrade -y"
 
     - name: "Install packages"
       command: "pkg add -y  {{ item }}"
       loop: "{{ install_packages }}"
+
+    - name: Create secret directory
+      file:
+        path: "{{ ansible_env.HOME }}/.local/.secret"
+        state: directory
+        mode: '0755'
+
+      # must copy through local script since the copy module does not work in termux
+    - name: copy dotfiles encryption key
+      local_action: 
+        module: command
+        argv:
+          - /bin/bash
+          - -c
+          - /home/connor/code/ansible-playbooks/configs/termux/copy-key-to-host.sh
+
+  roles:
+    - role: hussainweb.chezmoi
+      chezmoi_init_url: "https://github.com/0xConnorRhodes/termux-dotfiles"
+

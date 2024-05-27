@@ -8,3 +8,5 @@ install_packages:
   - tree
   - git
   - aria2
+  - chezmoi
+  - neovim
