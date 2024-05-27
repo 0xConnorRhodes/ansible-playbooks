@@ -12,6 +12,7 @@ install_packages:
   - zoxide
   - screen
   - mediainfo
+  - lf
 
 flatpak_packages:
   - md.obsidian.Obsidian
