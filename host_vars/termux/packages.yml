@@ -8,3 +8,4 @@ install_packages:
   - aria2
   - chezmoi
   - neovim
+  - zoxide
