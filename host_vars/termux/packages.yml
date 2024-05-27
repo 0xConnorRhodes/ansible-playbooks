@@ -1,6 +1,4 @@
 install_packages:
-  - python # install manually beforehand
-  - openssh # install manually beforehand
   - lua54
   - rsync
   - fish

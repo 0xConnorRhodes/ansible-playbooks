@@ -38,7 +38,10 @@
           - -c
           - /home/connor/code/ansible-playbooks/configs/termux/copy-key-to-host.sh
 
-  roles:
-    - role: hussainweb.chezmoi
-      chezmoi_init_url: "https://github.com/0xConnorRhodes/termux-dotfiles"
+    # first run deploys chezmoi config but doesn't decrypt, second run decrypts encrypted files
+    - name: 'init chezmoi dotfiles'
+      command: chezmoi init --apply https://github.com/0xConnorRhodes/termux-dotfiles
+      ignore_errors: true
 
+    - name: 'init chezmoi dotfiles'
+      command: chezmoi init --apply https://github.com/0xConnorRhodes/termux-dotfiles
