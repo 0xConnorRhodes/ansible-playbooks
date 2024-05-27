@@ -45,3 +45,16 @@
 
     - name: 'init chezmoi dotfiles'
       command: chezmoi init --apply https://github.com/0xConnorRhodes/termux-dotfiles
+
+    - name: 'configure ssh access to dotfiles repo 1'
+      replace:
+        path: "{{ ansible_env.HOME }}/.local/share/chezmoi/.git/config"
+        regexp: 'https://github.com/0xConnorRhodes/termux-dotfiles'
+        replace: 'git@github.com:0xConnorRhodes/termux-dotfiles.git'
+
+    # ensures that, if the chezmoi init appends .git to the end of the https url, you don't wind up with 2 .git strings at the end of the ssh url
+    - name: 'configure ssh access to dotfiles repo 2'
+      replace:
+        path: "{{ ansible_env.HOME }}/.local/share/chezmoi/.git/config"
+        regexp: 'git@github.com:0xConnorRhodes/termux-dotfiles.git.git'
+        replace: 'git@github.com:0xConnorRhodes/termux-dotfiles.git'
