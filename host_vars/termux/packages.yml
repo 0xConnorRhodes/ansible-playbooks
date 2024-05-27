@@ -9,3 +9,5 @@ install_packages:
   - chezmoi
   - neovim
   - zoxide
+  - mosh
+  - which
