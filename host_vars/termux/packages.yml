@@ -11,3 +11,4 @@ install_packages:
   - zoxide
   - mosh
   - which
+  - fd
