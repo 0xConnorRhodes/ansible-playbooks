@@ -1,5 +1,5 @@
 ---
-- name: Configure homeworld server
+- name: Configure termux environment
   hosts: termux
   vars_files:
     - host_vars/phone/secrets.yml
@@ -29,7 +29,12 @@
         state: directory
         mode: '0755'
 
-      # must copy through local script since the copy module does not work in termux
+
+  roles:
+    - role: generate_ssh_key
+
+  post_tasks:
+    # must copy through local script since the copy module does not work in termux
     - name: copy dotfiles encryption key
       local_action: 
         module: command
@@ -58,3 +63,15 @@
         path: "{{ ansible_env.HOME }}/.local/share/chezmoi/.git/config"
         regexp: 'git@github.com:0xConnorRhodes/termux-dotfiles.git.git'
         replace: 'git@github.com:0xConnorRhodes/termux-dotfiles.git'
+
+    - name: Ensure the 'code' directory exists in the user's home directory
+      file:
+        path: "{{ ansible_env.HOME }}/code"
+        state: directory
+        mode: '0755'
+
+    - name: Clone notes-scripts into code
+      git:
+        repo: 'git@github.com:0xConnorRhodes/notes-scripts.git'
+        dest: "{{ ansible_env.HOME }}/code/notes-scripts"
+        accept_hostkey: yes
