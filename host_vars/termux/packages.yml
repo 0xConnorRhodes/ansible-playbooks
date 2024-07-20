@@ -14,3 +14,4 @@ install_packages:
   - fd
   - bat
   - croc
+  - just
