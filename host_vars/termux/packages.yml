@@ -15,3 +15,4 @@ install_packages:
   - bat
   - croc
   - just
+  - dua
