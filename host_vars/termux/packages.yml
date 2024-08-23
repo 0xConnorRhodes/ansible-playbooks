@@ -1,5 +1,6 @@
 install_packages:
   - lua54
+  - termux-api
   - rsync
   - fish
   - fzf
