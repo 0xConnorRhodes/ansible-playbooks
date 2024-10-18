@@ -1,0 +1,8 @@
+    - name: 'Install Packages'
+      become: true
+      dnf:
+        name:
+          - screen
+          - fish
+          - ncurses # provides clear
+        state: present
