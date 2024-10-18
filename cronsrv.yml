@@ -5,4 +5,5 @@
           - screen
           - fish
           - ncurses # provides clear
+          - openssh-server
         state: present
