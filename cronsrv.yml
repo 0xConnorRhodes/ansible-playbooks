@@ -6,4 +6,10 @@
           - fish
           - ncurses # provides clear
           - openssh-server
+          - zoxide
+          - neovim
+          - fzf
+          - git
+          - bat
+          - fd-find
         state: present
