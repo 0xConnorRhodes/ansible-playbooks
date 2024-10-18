@@ -12,4 +12,12 @@
           - git
           - bat
           - fd-find
+          - ruby
         state: present
+
+- pipx:
+  - magic-wormhole
+  - maestral
+
+- gem:
+  - pry
