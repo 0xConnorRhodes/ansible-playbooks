@@ -14,6 +14,8 @@
           - fd-find
           - ruby
           - tree
+          - cronie
+          - cronie-anacron
         state: present
 
 - pipx:
@@ -22,3 +24,4 @@
 
 - gem:
   - pry
+  - active_support
