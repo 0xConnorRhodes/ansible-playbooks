@@ -16,6 +16,7 @@
           - tree
           - cronie
           - cronie-anacron
+          - dua-cli
         state: present
 
 - pipx:
