@@ -13,6 +13,7 @@
           - bat
           - fd-find
           - ruby
+          - tree
         state: present
 
 - pipx:
