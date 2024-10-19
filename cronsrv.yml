@@ -17,7 +17,10 @@
           - cronie
           - cronie-anacron
           - dua-cli
+          - wget
         state: present
+
+# install powershell-7.4.5-1.rh.x86_64.rpm from https://github.com/PowerShell/PowerShell (or later version)
 
 - pipx:
   - magic-wormhole
